@@ -3,7 +3,6 @@
 ## Found Resources
 
 - [Example Lexer](https://craftinginterpreters.com/scanning.html)
--
 
 ## RecSPL Specification Breakdown
 
