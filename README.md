@@ -3,6 +3,7 @@
 ## Found Resources
 
 - [Example Lexer](https://craftinginterpreters.com/scanning.html)
+- [Switch-case Tokenizer in Java](https://github.com/oracle/coherence/blob/bf64fbe59832e1dca3361f0afc5b3cab300572ca/prj/coherence-core/src/main/java/com/tangosol/dev/compiler/java/Tokenizer.java#L497)
 
 ## RecSPL Specification Breakdown
 
