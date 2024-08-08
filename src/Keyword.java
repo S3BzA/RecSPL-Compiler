@@ -1,31 +1,36 @@
 public enum Keyword {
+	// procedures
 	MAIN("main"),
-	NUM("num"),
-	TEXT("text"),
 	BEGIN("begin"),
 	END("end"),
 	SKIP("skip"),
 	HALT("halt"),
 	PRINT("print"),
 	INPUT("< input"),
-	EQUALS("="),
-	LPAREN("("),
-	RPAREN(")"),
-	COMMA(","),
+	// types
+	NUM("num"),
+	TEXT("text"),
+	VOID("void"),
+	// control flow
 	IF("if"),
 	THEN("then"),
 	ELSE("else"),
+	// operators
 	NOT("not"),
 	SQRT("sqrt"),
 	OR("or"),
 	AND("and"),
 	EQ("eq"),
-	GRT("grt"), // Assuming "qrt" was a typo in the original list
+	GRT("grt"),
 	ADD("add"),
 	SUB("sub"),
 	MUL("mul"),
 	DIV("div"),
-	VOID("void"),
+	// symbols
+	EQUALS("="),
+	LPAREN("("),
+	RPAREN(")"),
+	COMMA(","),
 	LBRACE("{"),
 	RBRACE("}");
 
