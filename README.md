@@ -108,3 +108,16 @@ SUBFUNCS ::= FUNCTIONS
 - **Functions (`F`)**: `F_[a-z]([a-z]|[0-9])*`
 - **Text (`T`)**: Strings with up to 8 characters, starting with an uppercase letter.
 - **Numbers (`N`)**: Integers and real numbers, optionally negative.
+
+## RecSPL Hello World Example
+
+```plaintext
+main {
+    text V_message,
+    begin
+        V_message = "Hello",
+        print V_message,
+        halt
+    end
+}
+```
