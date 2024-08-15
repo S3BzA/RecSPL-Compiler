@@ -5,6 +5,7 @@ import java.util.List;
 
 public class SourceReader {
     private List<String> sourceCode;
+	private int currentLine = 0;
 
     public void readSourceCode(String filePath) throws IOException {
         sourceCode = Files.readAllLines(Paths.get(filePath));
@@ -28,4 +29,12 @@ public class SourceReader {
         }
         return line.charAt(charIndex);
     }
+
+	public String nextLine() {
+		if (currentLine >= sourceCode.size()) {
+			System.out.println("End of file reached.");
+			return null;
+		}
+		return sourceCode.get(currentLine++);
+	}
 }
