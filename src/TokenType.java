@@ -1,4 +1,4 @@
-public enum Keyword {
+public enum TokenType {
 	// procedures
 	MAIN("main"),
 	BEGIN("begin"),
@@ -36,7 +36,7 @@ public enum Keyword {
 
 	private final String keyword;
 
-	Keyword(String keyword) {
+	TokenType(String keyword) {
 		this.keyword = keyword;
 	}
 
@@ -45,8 +45,8 @@ public enum Keyword {
 		return keyword;
 	}
 
-	public static Keyword fromString(String keyword) {
-		for (Keyword k : Keyword.values()) {
+	public static TokenType fromString(String keyword) {
+		for (TokenType k : TokenType.values()) {
 			if (k.keyword.equals(keyword)) {
 				return k;
 			}

@@ -3,12 +3,12 @@ import java.util.regex.Pattern;
 
 public class Token {
 	private int id;
-	private String tokenClass;
+	private TokenType tokenClass;
 	private String word;
 
 	public Token(int id, String tokenClass, String word) {
 		this.id = id;
-		this.tokenClass = tokenClass;
+		this.tokenClass = TokenType.fromString(tokenClass);
 		this.word = word;
 	}
 
@@ -21,11 +21,11 @@ public class Token {
 	}
 
 	public String getTokenClass() {
-		return tokenClass;
+		return tokenClass.toString();
 	}
 
 	public void setTokenClass(String tokenClass) {
-		this.tokenClass = tokenClass;
+		this.tokenClass = TokenType.fromString(tokenClass);
 	}
 
 	public String getWord() {

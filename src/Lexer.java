@@ -33,6 +33,15 @@ public class Lexer {
 				if (word.equals("")) {
 					continue;
 				}
+				switch (word) {
+					case value:
+						
+						break;
+				
+					default:
+						break;
+				}
+
 				tokens.add(new Token(tokenCounter++, "example_class", word));
 			}
 		}
