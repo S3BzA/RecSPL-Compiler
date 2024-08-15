@@ -20,9 +20,9 @@ public class Main {
 	}
 
 	private static void printHelp() {
-		System.out.println("Usage: make all ARGS=<file-path>");
-		System.out.println("ARGS Options:");
-		System.out.println("  --help, -h    Display this help menu.");
-		System.out.println("  path/to/file.txt   The path to the file you want to compile.");
+		Ansi.printlnFormatted(Ansi.yellow("Usage: make all ARGS="+Ansi.italic("<file-path>")));
+		Ansi.printlnFormatted(Ansi.yellow("ARGS Options:"));
+		Ansi.printlnFormatted(Ansi.yellow("  --help, -h    Display this help menu."));
+		Ansi.printlnFormatted(Ansi.yellow("  path/to/file.txt   The path to the file you want to compile."));
 	}
 }
