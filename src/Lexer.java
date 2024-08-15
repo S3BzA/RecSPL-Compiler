@@ -24,7 +24,7 @@ public class Lexer {
 		return tokens;
 	}
 
-	public void tokenize() { //*  This function will use our regex's @James to tokenize the source code
+	public void tokenize() { // * This function will use our regex's, @James, to tokenize the source code
 		String line;
 		int tokenCounter = 1;
 		while ((line = sourceReader.nextLine()) != null) {
@@ -33,19 +33,28 @@ public class Lexer {
 				if (word.equals("")) {
 					continue;
 				}
-				switch (word) {
-					case value:
-						
-						break;
-				
-					default:
-						break;
-				}
 
-				tokens.add(new Token(tokenCounter++, "example_class", word));
+				if (TokenType.isKeyword(word)) {
+					tokens.add(new Token(tokenCounter++, TokenType.fromString(word), word));
+					continue;
+				} else if (isVariableName(word)) {
+					tokens.add(new Token(tokenCounter++, TokenType.V , word));
+					continue;
+				} else if (isFunctionName(word)) {
+					tokens.add(new Token(tokenCounter++, TokenType.F, word));
+					continue;
+				}
 			}
 		}
 		exportTokens();
+	}
+
+	private boolean isVariableName(String word) {
+		return word.matches("V_[a-z]([a-z]|[0-9])*");
+	}
+
+	private boolean isFunctionName(String word) {
+		return word.matches("F_[a-z]([a-z]|[0-9])*\\(");
 	}
 
 	private void exportTokens() { // save tokens to a file.xml
@@ -63,21 +72,21 @@ public class Lexer {
 	}
 
 	public void importTokens(String file) {
-        try {
-            String content = new String(Files.readAllBytes(new File(file).toPath()));
+		try {
+			String content = new String(Files.readAllBytes(new File(file).toPath()));
 
-            Pattern tokPattern = Pattern.compile("<TOK>(.*?)</TOK>", Pattern.DOTALL);
-            Matcher matcher = tokPattern.matcher(content);
+			Pattern tokPattern = Pattern.compile("<TOK>(.*?)</TOK>", Pattern.DOTALL);
+			Matcher matcher = tokPattern.matcher(content);
 
-            while (matcher.find()) {
-                String tokXML = matcher.group(0);
-                Token token = Token.fromXML(tokXML);
-                tokens.add(token);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+			while (matcher.find()) {
+				String tokXML = matcher.group(0);
+				Token token = Token.fromXML(tokXML);
+				tokens.add(token);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public String toString() {

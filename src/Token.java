@@ -6,9 +6,9 @@ public class Token {
 	private TokenType tokenClass;
 	private String word;
 
-	public Token(int id, String tokenClass, String word) {
+	public Token(int id, TokenType tokenClass, String word) {
 		this.id = id;
-		this.tokenClass = TokenType.fromString(tokenClass);
+		this.tokenClass = tokenClass;
 		this.word = word;
 	}
 
@@ -39,7 +39,7 @@ public class Token {
 	public String toXML() {
 		return "<TOK>\n" +
 				"  <ID>" + id + "</ID>\n" +
-				"  <CLASS>" + tokenClass + "</CLASS>\n" +
+				"  <CLASS>" + tokenClass.name() + "</CLASS>\n" +
 				"  <WORD>" + word + "</WORD>\n" +
 				"</TOK>";
 	}
@@ -55,7 +55,7 @@ public class Token {
 
 		if (idMatcher.find() && classMatcher.find() && wordMatcher.find()) {
 			int id = Integer.parseInt(idMatcher.group(1));
-			String tokenClass = classMatcher.group(1);
+			TokenType tokenClass = TokenType.valueOf(classMatcher.group(1)); // Use valueOf to get the enum constant
 			String word = wordMatcher.group(1);
 			return new Token(id, tokenClass, word);
 		} else {
@@ -65,6 +65,6 @@ public class Token {
 
 	@Override
 	public String toString() {
-		return "TOKEN(" + id + " " + tokenClass + " " + word + ")";
+		return "TOKEN(" + id + " " + tokenClass.name() + " " + word + ")";
 	}
 }

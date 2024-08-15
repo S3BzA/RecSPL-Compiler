@@ -6,6 +6,7 @@ import java.util.List;
 public class SourceReader {
     private List<String> sourceCode;
 	private int currentLine = 0;
+	private int currentChar = 0;
 
     public void readSourceCode(String filePath) throws IOException {
         sourceCode = Files.readAllLines(Paths.get(filePath));
@@ -36,5 +37,13 @@ public class SourceReader {
 			return null;
 		}
 		return sourceCode.get(currentLine++);
+	}
+
+	public void reset() {
+		currentLine = 0;
+	}
+
+	public char nextChar() {
+		return getCharacter(currentLine, currentChar++);
 	}
 }

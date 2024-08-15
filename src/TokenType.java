@@ -32,7 +32,10 @@ public enum TokenType {
 	RPAREN(")"),
 	COMMA(","),
 	LBRACE("{"),
-	RBRACE("}");
+	RBRACE("}"),
+	// user-defined
+	V("V"),
+	F("F");
 
 	private final String keyword;
 
@@ -52,5 +55,14 @@ public enum TokenType {
 			}
 		}
 		throw new IllegalArgumentException("No keyword found for: " + keyword);
+	}
+
+	public static boolean isKeyword(String word) {
+		for (TokenType k : TokenType.values()) {
+			if (k.keyword.equals(word)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
