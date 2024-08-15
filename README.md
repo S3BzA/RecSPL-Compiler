@@ -1,5 +1,12 @@
 # RecSPL-Compiler
 
+## Usage
+With makefile:
+1. Compile the project & run the compiler: 
+```bash
+make all ARGS=path/to/source.txt
+```
+
 ## Found Resources
 
 - [Example Lexer](https://craftinginterpreters.com/scanning.html)

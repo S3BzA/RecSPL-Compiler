@@ -1,16 +1,15 @@
 all: build run
 
-#make .jar file 
 jar:
 	javac -d build/ src/*.java
-	jar cfe build/Assignment1.jar Main -C build/ .
-	java -jar build/Assignment1.jar
+	jar cfe build/Compiler.jar Main -C build/ .
+	java -jar build/compiler.jar
 
 build:
 	javac -d build/ src/*.java
 
 run:
-	java -cp build Main
+	java -cp build Main $(ARGS)
 
 clean:
 	rm -rf build
