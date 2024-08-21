@@ -37,6 +37,7 @@ public class Token {
 	}
 
 	public String toXML() {
+		//TODO: only need to categorise as keyword|V|F|T|N
 		return "<TOK>\n" +
 				"  <ID>" + id + "</ID>\n" +
 				"  <CLASS>" + tokenClass.name() + "</CLASS>\n" +

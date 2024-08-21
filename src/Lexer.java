@@ -43,6 +43,14 @@ public class Lexer {
 				} else if (isFunctionName(word)) {
 					tokens.add(new Token(tokenCounter++, TokenType.F, word));
 					continue;
+				} else if (isText(word)) {
+					tokens.add(new Token(tokenCounter++, TokenType.T, word));
+					continue;
+				} else if (isNumber(word)){
+					tokens.add(new Token(tokenCounter++, TokenType.N, word));
+					continue;
+				} else {
+					//TODO: reject, procedure not applicable
 				}
 			}
 		}
@@ -55,6 +63,14 @@ public class Lexer {
 
 	private boolean isFunctionName(String word) {
 		return word.matches("F_[a-z]([a-z]|[0-9])*\\(");
+	}
+
+	private boolean isText(String word){
+		return word.matches("\"[A-Z][a-z]{0,7}\"");
+	}
+
+	private boolean isNumber(String word){
+		return word.matches("0|-?0\\.([0-9])*[1-9]|-?[1-9]([0-9])*|-?[1-9]([0-9])*\\.([0-9])*[1-9]");
 	}
 
 	private void exportTokens() { // save tokens to a file.xml

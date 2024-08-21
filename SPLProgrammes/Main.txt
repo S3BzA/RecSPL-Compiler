@@ -1,8 +1,7 @@
-main {
-    text V_message,
+main
+    text V_message ,
     begin
-        V_message = "Hello",
-        print V_message,
-        halt
+        V_message = "Hello" ;
+        print V_message ;
+        halt ;
     end
-}

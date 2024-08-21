@@ -33,9 +33,12 @@ public enum TokenType {
 	COMMA(","),
 	LBRACE("{"),
 	RBRACE("}"),
+	SEMICOLON(";"),
 	// user-defined
 	V("V"),
-	F("F");
+	F("F"),
+	T("T"),
+	N("N");
 
 	private final String keyword;
 
@@ -58,6 +61,7 @@ public enum TokenType {
 	}
 
 	public static boolean isKeyword(String word) {
+		//TODO: potentially return false if word=V|F|T|N ? as these are not necessarily keywords (or valid) just our representation of the regex in the grammar
 		for (TokenType k : TokenType.values()) {
 			if (k.keyword.equals(word)) {
 				return true;
