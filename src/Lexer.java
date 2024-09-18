@@ -15,7 +15,7 @@ public class Lexer {
         sourceReader = new SourceReader();
         try {
             sourceReader.readSourceCode(sourceFile);
-    	} catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("Error reading source file: " + e.getMessage());
         }
     }
@@ -26,10 +26,10 @@ public class Lexer {
 
     public void tokenize() {
         List<String> sourceCodeLines = sourceReader.getSourceCode();
-		String sourceCode = String.join("\n", sourceCodeLines);
-		System.out.println("Source code:\n" + sourceCode);
+        String sourceCode = String.join("\n", sourceCodeLines);
+        System.out.println("Source code:\n" + sourceCode);
 
-        String regex = "\\b(main|begin|end|skip|halt|print|< input|num|text|void|if|then|else|not|sqrt|or|and|eq|grt|add|sub|mul|div|=|(|)|,|{|})\\b|V_[a-z]([a-z]|[0-9])*|F_[a-z]([a-z]|[0-9])*\\(";
+        String regex = "\\b(main|begin|end|skip|halt|print|input|num|text|void|if|then|else|not|sqrt|or|and|eq|grt|add|sub|mul|div)\\b|V_[a-z]([a-z]|[0-9])*|F_[a-z]([a-z]|[0-9])*|\"[A-Z][a-z]{0,7}\"|[=(),{}]";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(sourceCode);
         int tokenCounter = 1;
@@ -44,6 +44,8 @@ public class Lexer {
                 type = TokenType.V;
             } else if (isFunctionName(match)) {
                 type = TokenType.F;
+            } else if (isStringLiteral(match)) {
+                type = TokenType.STRING_LITERAL;
             } else {
                 continue;
             }
@@ -58,7 +60,15 @@ public class Lexer {
     }
 
     private boolean isFunctionName(String word) {
-        return word.matches("F_[a-z]([a-z]|[0-9])*\\(");
+        return word.matches("F_[a-z]([a-z]|[0-9])*");
+    }
+
+    private boolean isStringLiteral(String word) {
+        return word.matches("\"[A-Z][a-z]{0,7}\"");
+    }
+
+    private boolean isSymbol(String word) {
+        return word.matches("[=(),{}]");
     }
 
     private void exportTokens() { // save tokens to a file.xml

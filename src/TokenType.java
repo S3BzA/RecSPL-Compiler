@@ -1,3 +1,5 @@
+import javax.print.DocFlavor.STRING;
+
 public enum TokenType {
 	// procedures
 	MAIN("main"),
@@ -35,7 +37,8 @@ public enum TokenType {
 	RBRACE("}"),
 	// user-defined
 	V("V"),
-	F("F");
+	F("F"),
+	STRING_LITERAL("STRING_LITERAL");
 
 	private final String keyword;
 
