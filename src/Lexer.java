@@ -33,8 +33,16 @@ public class Lexer {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(sourceCode);
         int tokenCounter = 1;
+        int lastMatchEnd = 0;
 
         while (matcher.find()) {
+            if (matcher.start() > lastMatchEnd) {
+                String unmatched = sourceCode.substring(lastMatchEnd, matcher.start()).trim();
+                if (!unmatched.isEmpty()) {
+                    handleSyntaxError(unmatched);
+                }
+            }
+
             String match = matcher.group();
             TokenType type;
 
@@ -51,7 +59,16 @@ public class Lexer {
             }
 
             tokens.add(new Token(tokenCounter++, type, match));
+            lastMatchEnd = matcher.end();
         }
+
+        if (lastMatchEnd < sourceCode.length()) {
+            String unmatched = sourceCode.substring(lastMatchEnd).trim();
+            if (!unmatched.isEmpty()) {
+                handleSyntaxError(unmatched);
+            }
+        }
+
         exportTokens();
     }
 
@@ -67,8 +84,12 @@ public class Lexer {
         return word.matches("\"[A-Z][a-z]{0,7}\"");
     }
 
-    private boolean isSymbol(String word) {
-        return word.matches("[=(),{}]");
+    private void handleSyntaxError(String unmatched) {
+        if (unmatched.matches("\"[A-Z][a-z]{8,}\"")) {
+            throw new RuntimeException("Syntax Error: String literal invalid length: " + unmatched);
+        } else {
+            throw new RuntimeException("Syntax Error: Unrecognized token: " + unmatched);
+        }
     }
 
     private void exportTokens() { // save tokens to a file.xml
