@@ -15,7 +15,7 @@ public class Lexer {
         sourceReader = new SourceReader();
         try {
             sourceReader.readSourceCode(sourceFile);
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.err.println("Error reading source file: " + e.getMessage());
         }
     }
@@ -29,7 +29,8 @@ public class Lexer {
         String sourceCode = String.join("\n", sourceCodeLines);
         System.out.println("Source code:\n" + sourceCode);
 
-        String regex = "\\b(main|begin|end|skip|halt|print|< input|num|text|void|if|then|else|not|sqrt|or|and|eq|grt|add|sub|mul|div)\\b|V_[a-z]([a-z]|[0-9])*|F_[a-z]([a-z]|[0-9])*|\"[A-Z][a-z]{0,7}\"|[=(),{}]|0|0\\.[0-9]*[1-9]|-0\\.[0-9]*[1-9]|[1-9][0-9]*|-[1-9][0-9]*|[1-9][0-9]*\\.[0-9]*[1-9]|-[1-9][0-9]*\\.[0-9]*[1-9]";
+        // Updated regex pattern to include "< input" as a single token
+        		String regex = "\\b(main|begin|end|skip|halt|print|num|text|void|if|then|else|not|sqrt|or|and|eq|grt|add|sub|mul|div)\\b|<\\s*input|V_[a-z]([a-z]|[0-9])*|F_[a-z]([a-z]|[0-9])*|\"[A-Z][a-z]{0,7}\"|[=(),{}]|0|0\\.[0-9]*[1-9]|-0\\.[0-9]*[1-9]|[1-9][0-9]*|-[1-9][0-9]*|[1-9][0-9]*\\.[0-9]*[1-9]|-[1-9][0-9]*\\.[0-9]*[1-9]";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(sourceCode);
         int tokenCounter = 1;
@@ -44,6 +45,7 @@ public class Lexer {
             }
 
             String match = matcher.group();
+			
             TokenType type;
 
             if (TokenType.isKeyword(match)) {
@@ -55,7 +57,7 @@ public class Lexer {
             } else if (isStringLiteral(match)) {
                 type = TokenType.T;
             } else if (isNumberLiteral(match)) {
-                type = TokenType.V;
+                type = TokenType.N;
             } else {
                 continue;
             }
@@ -127,7 +129,7 @@ public class Lexer {
                 tokens.add(token);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error reading tokens from file: " + e.getMessage());
         }
     }
 
