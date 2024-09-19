@@ -29,7 +29,7 @@ public class Lexer {
         String sourceCode = String.join("\n", sourceCodeLines);
         System.out.println("Source code:\n" + sourceCode);
 
-        String regex = "\\b(main|begin|end|skip|halt|print|input|num|text|void|if|then|else|not|sqrt|or|and|eq|grt|add|sub|mul|div)\\b|V_[a-z]([a-z]|[0-9])*|F_[a-z]([a-z]|[0-9])*|\"[A-Z][a-z]{0,7}\"|[=(),{}]";
+        String regex = "\\b(main|begin|end|skip|halt|print|< input|num|text|void|if|then|else|not|sqrt|or|and|eq|grt|add|sub|mul|div)\\b|V_[a-z]([a-z]|[0-9])*|F_[a-z]([a-z]|[0-9])*|\"[A-Z][a-z]{0,7}\"|[=(),{}]|0|0\\.[0-9]*[1-9]|-0\\.[0-9]*[1-9]|[1-9][0-9]*|-[1-9][0-9]*|[1-9][0-9]*\\.[0-9]*[1-9]|-[1-9][0-9]*\\.[0-9]*[1-9]";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(sourceCode);
         int tokenCounter = 1;
@@ -53,7 +53,9 @@ public class Lexer {
             } else if (isFunctionName(match)) {
                 type = TokenType.F;
             } else if (isStringLiteral(match)) {
-                type = TokenType.STRING_LITERAL;
+                type = TokenType.T;
+            } else if (isNumberLiteral(match)) {
+                type = TokenType.V;
             } else {
                 continue;
             }
@@ -84,9 +86,15 @@ public class Lexer {
         return word.matches("\"[A-Z][a-z]{0,7}\"");
     }
 
+    private boolean isNumberLiteral(String word) {
+        return word.matches("0|0\\.[0-9]*[1-9]|-0\\.[0-9]*[1-9]|[1-9][0-9]*|-[1-9][0-9]*|[1-9][0-9]*\\.[0-9]*[1-9]|-[1-9][0-9]*\\.[0-9]*[1-9]");
+    }
+
     private void handleSyntaxError(String unmatched) {
         if (unmatched.matches("\"[A-Z][a-z]{8,}\"")) {
             throw new RuntimeException("Syntax Error: String literal invalid length: " + unmatched);
+        } else if (unmatched.matches("0|0\\.[0-9]*[1-9]|-0\\.[0-9]*[1-9]|[1-9][0-9]*|-[1-9][0-9]*|[1-9][0-9]*\\.[0-9]*[1-9]|-[1-9][0-9]*\\.[0-9]*[1-9]")) {
+            throw new RuntimeException("Syntax Error: Invalid number literal: " + unmatched);
         } else {
             throw new RuntimeException("Syntax Error: Unrecognized token: " + unmatched);
         }

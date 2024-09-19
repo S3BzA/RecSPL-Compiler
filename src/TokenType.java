@@ -38,7 +38,9 @@ public enum TokenType {
 	// user-defined
 	V("V"),
 	F("F"),
-	STRING_LITERAL("STRING_LITERAL");
+	T("T"),
+	N("N");
+
 
 	private final String keyword;
 

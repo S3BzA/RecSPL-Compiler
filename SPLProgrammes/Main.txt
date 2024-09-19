@@ -1,8 +1,10 @@
 main {
     text V_message,
+	num V_number,
     begin
         V_message = "Hello",
+		V_number < input,
         print V_message,
-        halt
+		halt
     end
 }
