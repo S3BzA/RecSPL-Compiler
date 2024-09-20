@@ -1,4 +1,3 @@
-import javax.print.DocFlavor.STRING;
 
 public enum TokenType {
 	// procedures
@@ -35,6 +34,7 @@ public enum TokenType {
 	COMMA(","),
 	LBRACE("{"),
 	RBRACE("}"),
+	SCOLON(";"),
 	// user-defined
 	V("V"),
 	F("F"),
