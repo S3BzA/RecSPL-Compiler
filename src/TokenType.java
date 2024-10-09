@@ -1,3 +1,4 @@
+
 public enum TokenType {
 	// procedures
 	MAIN("main"),
@@ -33,9 +34,13 @@ public enum TokenType {
 	COMMA(","),
 	LBRACE("{"),
 	RBRACE("}"),
+	SCOLON(";"),
 	// user-defined
 	V("V"),
-	F("F");
+	F("F"),
+	T("T"),
+	N("N");
+
 
 	private final String keyword;
 
