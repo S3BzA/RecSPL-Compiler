@@ -52,7 +52,7 @@ ARG ::= OP													--> {not, sqrt, or, and, eq, grt, add, sub, mul, div}
 COND ::= UCOND                                              --> {not, sqrt}
 COND ::= BCOND                                              --> {or, and, eq, grt, add, sub, mul, div}
 
-SIMPLE ::= BINOP( ATOMIC , ATOMIC )							--> {or, and, eq, grt, add, sub, mul, div}
+SIMPLE ::= BINOP(ATOMIC,ATOMIC)							--> {or, and, eq, grt, add, sub, mul, div}
 
 UCOND ::= UNOP(SIMPLE)                                      --> {not, sqrt}
 
@@ -60,9 +60,6 @@ BCOND ::= BINOP(BPARAM)                                     --> {or, and, eq, gr
 
 BPARAM ::= SIMPLE,SIMPLE                                    --> {or, and, eq, grt, add, sub, mul, div}
 BPARAM ::= ATOMIC,ATOMIC                                    --> {V-Token, N-Token, T-Token}
-
-COMPOSIT ::= BINOP( SIMPLE , SIMPLE ) 						--> {or, and, eq, grt, add, sub, mul, div}
-COMPOSIT ::= UNOP ( SIMPLE )								--> {not, sqrt}
 
 UNOP ::= not 												--> {not}
 UNOP ::= sqrt												--> {sqrt}
