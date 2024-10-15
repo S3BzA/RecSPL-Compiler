@@ -3,8 +3,10 @@ import java.util.List;
 
 public class Parser {
 	// Recursive Decent Parser for Grammar in LL(1)
+	// Must return a concrete syntax tree (CST)
 	private List<Token> tokens;
 	private int position;
+	private TreeNode root;
 
 	public Parser(List<Token> tokens) {
 		this.tokens = tokens;

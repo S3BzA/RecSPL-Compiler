@@ -3,13 +3,21 @@ import java.util.List;
 
 public class TreeNode<T> {
     private T data;  // Will be a Token in our case
-    private List<TreeNode<T>> children;
+    private final List<TreeNode<T>> children;
+	private boolean isTerminal;
+	private static int idCounter = 0;
+	private final int id;
 
-    public TreeNode(T data) {
-        this.data = data;
-        this.children = new ArrayList<>();
-    }
+	public TreeNode(T data) {
+		this.data = data;
+		this.children = new ArrayList<>();
+		this.isTerminal = true; // True until a children are added
+		this.id = idCounter++;
+	}
 
+	public int getId() {
+		return id;
+	}
     public T getData() {
         return data;
     }
@@ -21,24 +29,49 @@ public class TreeNode<T> {
     // Order of addition is respected
     public void addChild(TreeNode<T> child) {
         this.children.add(child);
+		if (this.isTerminal) {
+			this.isTerminal = false;
+		}
     }
 
     public void addChildren(List<TreeNode<T>> children) {
         this.children.addAll(children);
+		if (this.isTerminal) {
+			this.isTerminal = false;
+		}
     }
 
     public List<TreeNode<T>> getChildren() {
-        return children;
+		// if chidren is empty, return null
+		if (children.isEmpty()) {
+			return null;
+		}
+		return children;
     }
 
-    public boolean isLeaf() {
+    public boolean hasChildren() {
         return children.isEmpty();
     }
 
-    public void printTree(String prefix) {
-        System.out.println(prefix + data);
-        for (TreeNode<T> child : children) {
-            child.printTree(prefix + "  ");
-        }
-    }
+	// Print the tree in a readable format
+	// Prefix is used to indent the tree
+    	public void printTree(String prefix) {
+		// Null check for data
+		if (data == null) {
+			return;
+		}
+	
+		// Print the current node's data
+		System.out.println(prefix + data);
+	
+		// Null check for children
+		if (children == null) {
+			return;
+		}
+	
+		// Iterate over children and print them
+		for (TreeNode<T> child : children) {
+			child.printTree(prefix + "  ");
+		}
+	}
 }
