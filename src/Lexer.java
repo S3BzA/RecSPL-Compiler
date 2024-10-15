@@ -30,7 +30,7 @@ public class Lexer {
         System.out.println("Source code:\n" + sourceCode);
 
         // Updated regex pattern to include "< input" as a single token
-		String regex = "\\b(main|begin|end|skip|halt|print|num|text|void|if|then|else|not|sqrt|or|and|eq|grt|add|sub|mul|div)\\b|<\\s*input|V_[a-z]([a-z]|[0-9])*|F_[a-z]([a-z]|[0-9])*|\"[A-Z][a-z]{0,7}\"|[=(),{};]|0|0\\.[0-9]*[1-9]|-0\\.[0-9]*[1-9]|[1-9][0-9]*|-[1-9][0-9]*|[1-9][0-9]*\\.[0-9]*[1-9]|-[1-9][0-9]*\\.[0-9]*[1-9]";
+		String regex = "\\b(main|begin|end|skip|halt|print|return|num|text|void|if|then|else|not|sqrt|or|and|eq|grt|add|sub|mul|div)\\b|<\\s*input|V_[a-z]([a-z]|[0-9])*|F_[a-z]([a-z]|[0-9])*|\"[A-Z][a-z]{0,7}\"|[=(),{};]|0|0\\.[0-9]*[1-9]|-0\\.[0-9]*[1-9]|[1-9][0-9]*|-[1-9][0-9]*|[1-9][0-9]*\\.[0-9]*[1-9]|-[1-9][0-9]*\\.[0-9]*[1-9]";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(sourceCode);
         int tokenCounter = 1;

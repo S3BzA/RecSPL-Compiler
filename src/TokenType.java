@@ -7,6 +7,7 @@ public enum TokenType {
 	SKIP("skip"),
 	HALT("halt"),
 	PRINT("print"),
+	RETURN("return"),
 	INPUT("< input"),
 	// types
 	NUM("num"),

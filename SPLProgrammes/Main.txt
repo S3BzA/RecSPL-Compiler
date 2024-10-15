@@ -5,6 +5,7 @@ main {
         V_message = "Hello",
 		V_number < input,
         print V_message,
+		return V_number,
 		halt
     end
 }
