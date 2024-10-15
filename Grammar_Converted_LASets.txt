@@ -1,0 +1,99 @@
+// RULE --> LA SET:
+// No Conflicts Present
+
+PROG ::= main GLOBVARS ALGO FUNCTIONS						--> {main}
+
+GLOBVARS ::= /* nullable */									--> FOLLOW(GLOBVARS) = {begin}
+GLOBVARS ::= VTYP VNAME , GLOBVARS							--> {V-Token}
+
+VTYP ::= num												--> {num}
+VTYP ::= text												--> {text}
+
+VNAME ::= V-Token											--> {V-Token}
+
+ALGO ::= begin INSTRUC end									-->	{begin}
+
+INSTRUC ::= /* nullable */									--> FOLLOW(INSTRUC) = {end}
+INSTRUC ::= COMMAND ; INSTRUC								--> {skip, halt, print, V-Token, F-Token, if, return}
+
+COMMAND ::= skip											--> {skip}
+COMMAND ::= halt											-->	{halt}
+COMMAND ::= print ATOMIC									--> {print}
+COMMAND ::= ASSIGN 											--> {V-Token}
+COMMAND ::= CALL 											--> {F-Token}
+COMMAND ::= BRANCH											--> {if}
+COMMAND ::= return ATOMIC									--> {return}
+
+ATOMIC ::= VNAME 											--> {V-Token}
+ATOMIC ::= CONST											--> {N-Token, T-Token}
+
+CONST ::= N-Token											--> {N-Token}
+CONST ::= T-Token											--> {T-Token}
+
+ASSIGN ::= VNAME ASSIGNOP                                   --> {V-Token}
+
+ASSIGNOP ::= < input                                        --> { < }
+ASSIGNOP ::= = Term                                         --> { = }
+
+CALL ::= FNAME(ATOMIC, ATOMIC, ATOMIC)						--> {F-Token}
+
+BRANCH ::= if COND then ALGO else ALGO						--> {if}
+
+TERM ::= ATOMIC 											--> {V-Token, N-Token, T-Token}
+TERM ::= CALL												--> {F-Token}
+TERM ::= OP													--> {not, sqrt, or, and, eq, grt, add, sub, mul, div}
+
+OP ::= UNOP(ARG) 											--> {not, sqrt}
+OP ::= BINOP(ARG,ARG)										--> {or, and, eq, grt, add, sub, mul, div}
+
+ARG ::= ATOMIC												--> {V-Token, N-Token, T-Token}
+ARG ::= OP													--> {not, sqrt, or, and, eq, grt, add, sub, mul, div}
+
+COND ::= UCOND                                              --> {not, sqrt}
+COND ::= BCOND                                              --> {or, and, eq, grt, add, sub, mul, div}
+
+SIMPLE ::= BINOP( ATOMIC , ATOMIC )							--> {or, and, eq, grt, add, sub, mul, div}
+
+UCOND ::= UNOP(SIMPLE)                                      --> {not, sqrt}
+
+BCOND ::= BINOP(BPARAM)                                     --> {or, and, eq, grt, add, sub, mul, div}
+
+BPARAM ::= SIMPLE,SIMPLE                                    --> {or, and, eq, grt, add, sub, mul, div}
+BPARAM ::= ATOMIC,ATOMIC                                    --> {V-Token, N-Token, T-Token}
+
+COMPOSIT ::= BINOP( SIMPLE , SIMPLE ) 						--> {or, and, eq, grt, add, sub, mul, div}
+COMPOSIT ::= UNOP ( SIMPLE )								--> {not, sqrt}
+
+UNOP ::= not 												--> {not}
+UNOP ::= sqrt												--> {sqrt}
+
+BINOP ::= or 												--> {or}
+BINOP ::= and 												--> {and}
+BINOP ::= eq 												--> {eq}
+BINOP ::= grt 												--> {grt}
+BINOP ::= add 												--> {add}
+BINOP ::= sub 												--> {sub}
+BINOP ::= mul												--> {mul}
+BINOP ::= div												--> {div}
+
+FNAME ::= F-Token											--> {F-Token}
+
+FUNCTIONS ::= /* nullable */ 								--> FOLLOW(FUNCTIONS) = {end}
+FUNCTIONS ::= DECL FUNCTIONS								--> {num, void}
+
+DECL ::= HEADER BODY										--> {num, void}
+
+HEADER ::= FTYP FNAME(VNAME, VNAME, VNAME)					--> {num, void}
+
+FTYP ::= num 												--> {num}
+FTYP ::= void												--> {void}
+
+BODY ::= PROLOG LOCVARS ALGO EPILOG SUBFUNCS end			--> { { } 
+
+PROLOG ::= {												--> { { }
+
+EPILOG ::= }												--> { } }
+
+LOCVARS ::= VTYP VNAME , VTYP VNAME , VTYP VNAME ,			--> {V-Token}
+
+SUBFUNCS ::= FUNCTIONS										--> {num, void, end}
