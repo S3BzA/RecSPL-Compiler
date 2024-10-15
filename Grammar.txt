@@ -6,7 +6,7 @@ VNAME ::= V-Token
 ALGO ::= begin INSTRUC end
 INSTRUC ::= /* nullable */
 INSTRUC ::= COMMAND ; INSTRUC
-COMMAND ::= skip | halt | print ATOMIC | ASSIGN | CALL | BRANCH
+COMMAND ::= skip | halt | print ATOMIC | ASSIGN | CALL | BRANCH | return ATOMIC
 ATOMIC ::= VNAME | CONST
 CONST ::= N-Token | T-Token
 ASSIGN ::= VNAME < input | VNAME = TERM
