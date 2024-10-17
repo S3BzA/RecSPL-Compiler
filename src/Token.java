@@ -21,7 +21,7 @@ public class Token {
 	}
 
 	public String getTokenClass() {
-		return tokenClass.toString();
+		return tokenClass.name();
 	}
 
 	public void setTokenClass(String tokenClass) {

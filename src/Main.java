@@ -14,8 +14,13 @@ public class Main {
 			Lexer lexer = new Lexer(filePath);
 			lexer.tokenize();
 			Ansi.printlnFormatted(Ansi.blue(lexer.toString()));
+			Ansi.printlnFormatted(Ansi.green("Starting Parser..."));
+			Parser parser = new Parser(lexer.getTokens());
+			parser.parse();
+			parser.printSyntaxTree();
 		} catch (Exception e) {
 			Ansi.printlnFormatted(Ansi.red("Error: " + e.getMessage()));
+			e.printStackTrace();
 		}
 	}
 

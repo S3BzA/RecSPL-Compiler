@@ -55,20 +55,20 @@ public class TreeNode<T> {
 
 	// Print the tree in a readable format
 	// Prefix is used to indent the tree
-    	public void printTree(String prefix) {
+	public void printTree(String prefix) {
 		// Null check for data
 		if (data == null) {
 			return;
 		}
-	
+
 		// Print the current node's data
 		System.out.println(prefix + data);
-	
+
 		// Null check for children
 		if (children == null) {
 			return;
 		}
-	
+
 		// Iterate over children and print them
 		for (TreeNode<T> child : children) {
 			child.printTree(prefix + "  ");
