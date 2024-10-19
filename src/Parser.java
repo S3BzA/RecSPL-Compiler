@@ -419,7 +419,9 @@ public class Parser {
 
 	// SUBFUNCS ::= FUNCTIONS
 	private TreeNode<Token> parseSubFuncs() {
-		return parseFunctions(); // Functions are sub-functions
+		TreeNode<Token> subFuncsNode = new TreeNode<>(new Token(-1, TokenType.V, "SUBFUNCS")); // Non-terminal node
+		subFuncsNode.addChild(parseFunctions()); // Functions are sub-functions
+		return subFuncsNode; // Functions are sub-functions
 	}
 }
 
