@@ -1,4 +1,5 @@
 
+import com.sun.source.tree.Tree;
 import java.util.List;
 
 public class Parser {
@@ -155,10 +156,17 @@ public class Parser {
 		} else
 			switch (current) {
 				case V -> {
-					return new TreeNode<>(match(TokenType.V)); // Match V-Token (variable name)
+					TreeNode<Token> atomicNode = new TreeNode<>(new Token(-1, TokenType.V, "ATOMIC")); // Non-terminal node
+					atomicNode.addChild(new TreeNode<>(match(TokenType.V))); // Match V-Token (variable name)
+					return atomicNode; // Match V-Token (variable name)
 				}
 				case N, T -> {
-					return new TreeNode<>(match(current)); // Match constant (N-Token or T-Token)
+					TreeNode<Token> atomicNode = new TreeNode<>(new Token(-1, TokenType.V, "ATOMIC")); // Non-terminal node
+					TreeNode<Token> constNode = new TreeNode<>(new Token(-1, TokenType.V, "CONST")); // Non-terminal node
+					// Add CONST non-terminal node to the atomic node
+					constNode.addChild(new TreeNode<>(match(current))); // Match constant (N-Token or T-Token)
+					atomicNode.addChild(constNode);
+					return atomicNode; // Match constant (N-Token or T-Token)
 				}
 				default -> {
 					error("Expected atomic expression");
@@ -174,7 +182,7 @@ public class Parser {
 		switch (peek().getWord()) {
 			case "< input" -> assignNode.addChild(new TreeNode<>(match(TokenType.INPUT))); // Match '< input'
 			case "=" -> {
-				match(TokenType.EQUALS); // Match '='
+				assignNode.addChild(new TreeNode<>(match(TokenType.EQUALS))); // Match '='
 				assignNode.addChild(parseTerm()); // Parse the term on the right-hand side
 			}
 			default -> error("Invalid assignment syntax");
@@ -223,16 +231,20 @@ public class Parser {
 
 	// TERM ::= ATOMIC | CALL | OP
 	private TreeNode<Token> parseTerm() {
+		TreeNode<Token> termNode = new TreeNode<>(new Token(-1, TokenType.V, "TERM")); // Non-terminal node
 		TokenType current = TokenType.fromString(peek().getTokenClass());
 		switch (current) {
 			case V, N, T -> {
-				return parseAtomic(); // If it's a variable or constant, parse it as atomic
+				termNode.addChild(parseAtomic()); // If it's a variable or constant, parse it as atomic
+				return termNode;
 			}
 			case F -> {
-				return parseCall(); // If it's a function call, parse as a call
+				termNode.addChild(parseCall()); // If it's a function call, parse as a call
+				return termNode;
 			}
 			default -> {
-				return parseOp(); // Otherwise, it's an operator, parse as an operation
+				termNode.addChild(parseOp()); // Otherwise, it's an operator, parse as an operation
+				return termNode;
 			}
 		}
 	}
@@ -240,25 +252,25 @@ public class Parser {
 	// OP ::= UNOP(ARG) | BINOP(ARG,ARG)
 	private TreeNode<Token> parseOp() {
 		TokenType current = TokenType.fromTokenType(peek().getTokenClass());
-		TreeNode<Token> opNode;
+		TreeNode<Token> opNode = new TreeNode<Token>(new Token(-1, TokenType.V, "OP")); // Non-terminal node
 
 		// UNOP handling (unary operations)
 		if (current == TokenType.NOT || current == TokenType.SQRT) {
-			opNode = new TreeNode<>(match(current)); // Match 'not' or 'sqrt'
-			match(TokenType.LPAREN); // Match '('
+			opNode.addChild(new TreeNode<>(match(current))); // Match 'not' or 'sqrt'
+			opNode.addChild(new TreeNode<>(match(TokenType.LPAREN))); // Match '('
 			opNode.addChild(parseArg()); // Parse argument inside parentheses
-			match(TokenType.RPAREN); // Match ')'
+			opNode.addChild(new TreeNode<>(match(TokenType.RPAREN))); // Match ')'
 		}
 		// BINOP handling (binary operations)
 		else if (current == TokenType.ADD || current == TokenType.SUB || current == TokenType.MUL ||
 				current == TokenType.DIV || current == TokenType.OR || current == TokenType.AND ||
 				current == TokenType.EQ || current == TokenType.GRT) {
-			opNode = new TreeNode<>(match(current)); // Match binary operator
-			match(TokenType.LPAREN); // Match '('
+			opNode.addChild(new TreeNode<>(match(current))); // Match binary operator
+			opNode.addChild(new TreeNode<>(match(TokenType.LPAREN))); // Match '('
 			opNode.addChild(parseArg()); // Parse first argument
-			match(TokenType.COMMA); // Match ','
+			opNode.addChild(new TreeNode<>(match(TokenType.COMMA))); // Match ','
 			opNode.addChild(parseArg()); // Parse second argument
-			match(TokenType.RPAREN); // Match ')'
+			opNode.addChild(new TreeNode<>(match(TokenType.RPAREN))); // Match ')'
 		} else {
 			error("Expected operator");
 			return null;
@@ -269,22 +281,28 @@ public class Parser {
 
 	// ARG ::= ATOMIC | OP
 	private TreeNode<Token> parseArg() {
+		TreeNode<Token> argNode = new TreeNode<>(new Token(-1, TokenType.V, "ARG")); // Non-terminal node
 		TokenType current = TokenType.fromString(peek().getTokenClass());
 		if (current == TokenType.V || current == TokenType.N || current == TokenType.T) {
-			return parseAtomic(); // If it's an atomic value, parse it
+			argNode.addChild(parseAtomic()); // If it's an atomic value, parse it
+			return argNode;
 		} else {
-			return parseOp(); // Otherwise, it's an operation
+			argNode.addChild(parseOp()); // Otherwise, it's an operation
+			return argNode; // Otherwise, it's an operation
 		}
 	}
 
 	// COND ::= UCOND | BCOND
 	private TreeNode<Token> parseCond() {
+		TreeNode<Token> condNode = new TreeNode<>(new Token(-1, TokenType.V, "COND")); // Non-terminal node
 		TokenType current = TokenType.fromTokenType(peek().getTokenClass());
 		if (current == TokenType.NOT || current == TokenType.SQRT) {
-			return parseUCond(); // Parse unary condition
+			condNode.addChild(parseUCond());
+			return condNode; // Parse unary condition
 		} else if (current == TokenType.OR || current == TokenType.AND || current == TokenType.EQ
 				|| current == TokenType.GRT) {
-			return parseBCond(); // Parse binary condition
+			condNode.addChild(parseBCond());
+			return condNode; // Parse binary condition
 		} else {
 			error("Expected condition");
 			return null;
@@ -293,21 +311,23 @@ public class Parser {
 
 	// UCOND ::= UNOP(SIMPLE)
 	private TreeNode<Token> parseUCond() {
-		TreeNode<Token> uCondNode = new TreeNode<>(match(TokenType.fromString(peek().getTokenClass()))); // Match 'not'
+		TreeNode<Token> uCondNode = new TreeNode<>(new Token(-1, TokenType.V, "UCOND")); // Match 'not'
+		uCondNode.addChild(new TreeNode<>(match(TokenType.fromString(peek().getTokenClass())))); // Match 'not'
 																											// or 'sqrt'
-		match(TokenType.LPAREN); // Match '('
+		uCondNode.addChild(new TreeNode<>(match(TokenType.LPAREN))); // Match '('
 		uCondNode.addChild(parseSimple()); // Parse simple condition inside parentheses
-		match(TokenType.RPAREN); // Match ')'
+		uCondNode.addChild(new TreeNode<>(match(TokenType.RPAREN))); // Match ')'
 		return uCondNode;
 	}
 
 	// BCOND ::= BINOP(BPARAM)
 	private TreeNode<Token> parseBCond() {
-		TreeNode<Token> bCondNode = new TreeNode<>(match(TokenType.fromTokenType(peek().getTokenClass()))); // Match binary
+		TreeNode<Token> bCondNode = new TreeNode<>(new Token(-1, TokenType.V, "BCOND")); // Non-terminal node
+		bCondNode.addChild(new TreeNode<>(match(TokenType.fromTokenType(peek().getTokenClass())))); // Match binary
 																											// operator
-		match(TokenType.LPAREN); // Match '('
+		bCondNode.addChild(new TreeNode<>(match(TokenType.LPAREN))); // Match '('
 		bCondNode.addChild(parseBParam()); // Parse the binary parameters
-		match(TokenType.RPAREN); // Match ')'
+		bCondNode.addChild(new TreeNode<>(match(TokenType.RPAREN))); // Match ')'
 		return bCondNode;
 	}
 
@@ -322,7 +342,7 @@ public class Parser {
 			bParamNode.addChild(parseSimple()); // Parse first simple expression
 		}
 
-		match(TokenType.COMMA); // Match ','
+		bParamNode.addChild(new TreeNode<>(match(TokenType.COMMA))); // Match ','
 
 		TokenType secondArg = TokenType.fromTokenType(peek().getTokenClass());
 		if (secondArg == TokenType.V || secondArg == TokenType.N || secondArg == TokenType.T) {
@@ -336,14 +356,15 @@ public class Parser {
 
 	// SIMPLE ::= BINOP(ATOMIC,ATOMIC)
 	private TreeNode<Token> parseSimple() {
-		TreeNode<Token> simpleNode = new TreeNode<>(match(TokenType.fromTokenType(peek().getTokenClass()))); // Match
+		TreeNode<Token> simpleNode = new TreeNode<>(new Token(-1, TokenType.V, "SIMPLE")); // Non-terminal node
+		simpleNode.addChild(new TreeNode<>(match(TokenType.fromTokenType(peek().getTokenClass())))); // Match
 																											// binary
 																											// operator
-		match(TokenType.LPAREN); // Match '('
+		simpleNode.addChild(new TreeNode<>(match(TokenType.LPAREN))); // Match '('
 		simpleNode.addChild(parseAtomic()); // Parse first atomic argument
-		match(TokenType.COMMA); // Match ','
+		simpleNode.addChild(new TreeNode<>(match(TokenType.COMMA))); // Match ','
 		simpleNode.addChild(parseAtomic()); // Parse second atomic argument
-		match(TokenType.RPAREN); // Match ')'
+		simpleNode.addChild(new TreeNode<>(match(TokenType.RPAREN))); // Match ')'
 		return simpleNode;
 	}
 
@@ -371,13 +392,13 @@ public class Parser {
 		TreeNode<Token> headerNode = new TreeNode<>(new Token(-1, TokenType.V, "HEADER")); // Non-terminal node
 		headerNode.addChild(new TreeNode<>(match(TokenType.fromString(peek().getWord())))); // Match function type (num | void)
 		headerNode.addChild(new TreeNode<>(match(TokenType.F))); // Match function name (FNAME)
-		match(TokenType.LPAREN); // Match '('
+		headerNode.addChild(new TreeNode<>(match(TokenType.LPAREN))); // Match '('
 		headerNode.addChild(new TreeNode<>(match(TokenType.V))); // Match first variable name (VNAME)
-		match(TokenType.COMMA);
+		headerNode.addChild(new TreeNode<>(match(TokenType.COMMA)));
 		headerNode.addChild(new TreeNode<>(match(TokenType.V))); // Match second variable name (VNAME)
-		match(TokenType.COMMA);
+		headerNode.addChild(new TreeNode<>(match(TokenType.COMMA)));
 		headerNode.addChild(new TreeNode<>(match(TokenType.V))); // Match third variable name (VNAME)
-		match(TokenType.RPAREN); // Match ')'
+		headerNode.addChild(new TreeNode<>(match(TokenType.RPAREN))); // Match ')'
 		return headerNode;
 	}
 
