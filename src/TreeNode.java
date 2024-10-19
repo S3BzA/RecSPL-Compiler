@@ -74,4 +74,19 @@ public class TreeNode<T> {
 			child.printTree(prefix + "  ");
 		}
 	}
+
+	public void printTree(String prefix, boolean isTail) {
+        // Print the current node's data (will use Token's toString method)
+        System.out.println(prefix + (isTail ? "└── " : "├── ") + data.toString());
+
+        // Iterate over the children
+        if (children != null) {
+            for (int i = 0; i < children.size(); i++) {
+                // Determine if the child is the last one
+                boolean isLast = (i == children.size() - 1);
+                // Recursively print the children with updated prefix
+                children.get(i).printTree(prefix + (isTail ? "    " : "│   "), isLast);
+            }
+        }
+    }
 }
