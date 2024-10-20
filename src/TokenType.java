@@ -63,6 +63,15 @@ public enum TokenType {
 		throw new IllegalArgumentException("No keyword found for: " + keyword);
 	}
 
+	public static TokenType fromTokenType(String tokenType) {
+		for (TokenType k : TokenType.values()) {
+			if (k.name().equals(tokenType)) {
+				return k;
+			}
+		}
+		throw new IllegalArgumentException("No keyword found for: " + tokenType);
+	}
+
 	public static boolean isKeyword(String word) {
 		for (TokenType k : TokenType.values()) {
 			if (k.keyword.equals(word)) {
