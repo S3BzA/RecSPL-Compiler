@@ -378,6 +378,7 @@ public class Parser {
 
 		while (peek() != null && (peek().getWord().equals("void") || peek().getWord().equals("num"))) {
 			functionsNode.addChild(parseDecl()); // Parse function declaration
+			functionsNode.addChild(parseFunctions()); // Parse more functions
 		}
 
 		return functionsNode;
