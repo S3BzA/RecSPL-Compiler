@@ -37,7 +37,11 @@ public class ScopeTree {
 
     public void CalculateScope(TreeNode<Token> tok){}
 
-    public Boolean isDeclNode(TreeNode<Token> tok){
+    public Boolean IsDeclNode(TreeNode<Token> tok){
+        if (tok.getData())
+    }
+
+    public String FindDeclName(TreeNode<Token> tok){
         return null;
     }
 

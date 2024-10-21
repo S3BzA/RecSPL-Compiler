@@ -39,14 +39,15 @@ public class ScopeAnalyser {
     }
 
     public void BuildScopeTree(){
-        
-    }
     // Phase 1 build empty  scope trees aka bind functions->implicity creates scope trees !will error when functions are incorrectly declared 
     // dfs the tree
     // if node is a declare
     // 1) get The current scope of the decl node using calculatescope(treenode)
-    // 2) add this new scope as new symboltable child to current scope and bind func to current scope
+    // 2) add this new scope by binding bind func to current scope automatically adds as child
     // 3) when all nodes visited set scope tree
+
+    }
+
 
     //Phase 2 Visit each node and populate scope trees with variables
     //Phase 3 Analyse using variable lookups if var use is correct !will error if functions and variables are incorrectly called and used
