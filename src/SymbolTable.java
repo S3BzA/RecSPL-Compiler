@@ -17,35 +17,34 @@ public class SymbolTable {
     }
 
     //Binding Function and var binding rule logic
-    //False if error/does not conform to rules
 
-    public Boolean BindVar(String fromName, String toName, String type) {
+    public void BindVar(String fromName, String toName, String type) {
         if (vTable.containsKey(fromName)) {
-            return false;
+            throw new RuntimeException("May not redeclare scoped variable "+ fromName);
         } else {
             Symbol sym = new Symbol(toName, type);
             vTable.put(fromName, sym);
-            return true;
         }
     }
     
-    public Boolean BindFunc(String fromName, String toName,String type){
+    public void BindFunc(String fromName, String toName,String type){
+        if (fromName.equals("main")){
+            throw new RuntimeException("May not redeclare main function");
+        }
         if (fromName.equals(scopeName)) {
-            return false;
+            throw new RuntimeException("May not redeclare parent-scoped function "+ fromName);
         } else if (fTable.containsKey(fromName)) {
-            return false;
+            throw new RuntimeException("May not redeclare sibling-scoped function "+ fromName);
         } else {
             // Bind the function in the current scope
             Symbol sym = new Symbol(toName, type);
             fTable.put(fromName, sym);
-            //add scope to children scope/open new scope
+            //add scope to children scope/open new scope can assume addchild will be error free
             this.AddChild(fromName);
-            return true;
         }
     }
 
     //Lookup Function and var lookup rule logic 
-    //Null if error/decl not found/not valid function call
 
     public Symbol LookupVar(String name) {
         if (vTable.containsKey(name)) {
@@ -53,13 +52,13 @@ public class SymbolTable {
         } else if (parent != null) {
             return parent.LookupVar(name);
         } else {
-            return null;
+            throw new RuntimeException("Use of undeclared or incorrectly declared variable "+ name);
         }
     }
 
     public Symbol LookupFunc(String name){
         if (name.equals("main")){
-            return null;
+            throw new RuntimeException("May not make calls to main function");
         }
         
         if (fTable.containsKey(name)){
@@ -70,7 +69,7 @@ public class SymbolTable {
             return parent.LookupFunc(scopeName);
         }
 
-        return null;
+        throw new RuntimeException("Function calls may only refer to immediate child or current function");
     }
 
     //Helpers
@@ -83,19 +82,36 @@ public class SymbolTable {
         children.add(child);
     }
 
-    //null if error
     public SymbolTable getChild(String scopeName){
         if (children == null) {
-            return null;
+            throw new RuntimeException("Something went wrong fetching child no children");
         }
-
+        SymbolTable toReturn = null;
         for (SymbolTable child : children) {
             if (child.scopeName.equals(scopeName)) {
-                return child;
+                toReturn  = child;
             }
         }
 
-        return null;
+        if (toReturn == null) {
+            throw new RuntimeException("Something went wrong fetching child no children found with the scope name "+scopeName);
+        }
+
+        return toReturn;
+    }
+
+    //for printing
+
+    public List<SymbolTable> getChildren() {
+        return children != null ? children : new ArrayList<>();
+    }
+
+    public Map<String, Symbol> getVTable() {
+        return vTable;
+    }
+
+    public Map<String, Symbol> getFTable() {
+        return fTable;
     }
 
     //null if root
@@ -103,4 +119,7 @@ public class SymbolTable {
         return this.parent;
     }
 
+    public String GetScopeName(){
+        return this.scopeName;
+    }
 }

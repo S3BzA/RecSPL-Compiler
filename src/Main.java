@@ -20,7 +20,7 @@ public class Main {
 			parser.printSyntaxTree();
 			ScopeAnalyser scopeAnalyser = new ScopeAnalyser(parser.getRoot());
 			Ansi.printlnFormatted(Ansi.green("Building Symbol Table..."));
-			scopeAnalyser.PopulateTree();
+			scopeAnalyser.ScopeTest();
 			Ansi.printlnFormatted(Ansi.green("Analysing..."));
 		} catch (Exception e) {
 			Ansi.printlnFormatted(Ansi.red("Error: " + e.getMessage()));

@@ -6,4 +6,9 @@ public class Symbol {
         this.name = name;
         this.type = type;
     }
+
+    @Override
+    public String toString(){
+        return "Symbol(name=" + name + ", type=" + type + ")";
+    }
 }
