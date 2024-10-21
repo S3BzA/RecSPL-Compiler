@@ -84,13 +84,16 @@ public class Parser {
 			TreeNode<Token> vtypNode = new TreeNode<>(new Token(-1, TokenType.V, "VTYP")); // Match VTYP (num | text)
 			vtypNode.addChild(new TreeNode<>(match(TokenType.fromString(peek().getWord()))));
 			globVarsNode.addChild(vtypNode);
+
 			TreeNode<Token> vnameNode = new TreeNode<>(new Token(-1, TokenType.V, "VNAME")); // Match VNAME (V-Token)
 			vnameNode.addChild(new TreeNode<>(match(TokenType.V))); // Match VNAME (V-Token)
 			globVarsNode.addChild(vnameNode);
 
 			if (peek() != null && peek().getTokenClass().equals("COMMA")) {
 				globVarsNode.addChild(new TreeNode<>(match(TokenType.COMMA))); // Match comma
+				globVarsNode.addChild(parseGlobVars()); // Recursively parse more global variables
 			}
+
 		}
 
 		return globVarsNode;
@@ -121,14 +124,19 @@ public class Parser {
 		return instrucNode;
 	}
 
-	// COMMAND ::= skip | halt | print ATOMIC | ASSIGN | CALL | BRANCH | return
-	// ATOMIC
+	// COMMAND ::= skip | halt | print ATOMIC | ASSIGN | CALL | BRANCH | return ATOMIC
 	private TreeNode<Token> parseCommand() {
 		TokenType current = TokenType.fromTokenType(peek().getTokenClass());
 		TreeNode<Token> commandNode;
 		switch (current) {
-			case SKIP -> commandNode = new TreeNode<>(match(TokenType.SKIP)); // Match 'skip'
-			case HALT -> commandNode = new TreeNode<>(match(TokenType.HALT)); // Match 'halt'
+			case SKIP -> {
+				commandNode = new TreeNode<>(new Token(-1, TokenType.V, "COMMAND"));
+				commandNode.addChild(new TreeNode<>(match(TokenType.SKIP))); // Match 'skip'
+			}
+			case HALT -> {
+				commandNode = new TreeNode<>(new Token(-1, TokenType.V, "COMMAND"));
+				commandNode.addChild(new TreeNode<>(match(TokenType.HALT))); // Match 'halt'
+			}
 			case PRINT -> {
 				commandNode = new TreeNode<>(new Token(-1, TokenType.V, "COMMAND")); // Match 'print'
 				commandNode.addChild(new TreeNode<>(match(TokenType.PRINT))); // Match 'print'
@@ -139,9 +147,18 @@ public class Parser {
 				commandNode.addChild(new TreeNode<>(match(TokenType.RETURN))); // Match 'return'
 				commandNode.addChild(parseAtomic()); // Match atomic after 'return'
 			}
-			case V -> commandNode = parseAssign(); // Parse assignment if V-Token (variable)
-			case F -> commandNode = parseCall(); // Parse function call
-			case IF -> commandNode = parseBranch(); // Parse branch (if-then-else)
+			case V -> {
+				commandNode = new TreeNode<>(new Token(-1, TokenType.V, "COMMAND")); // Non-terminal node
+				commandNode.addChild(parseAssign()); // Parse assignment if V-Token (variable)
+				}
+			case F -> {
+				commandNode = new TreeNode<>(new Token(-1, TokenType.V, "COMMAND")); // Non-terminal node
+				commandNode.addChild(parseCall()); // Parse function call
+			}
+			case IF -> {
+				commandNode = new TreeNode<>(new Token(-1, TokenType.V, "COMMAND")); // Non-terminal node
+				commandNode.addChild(parseBranch()); // Parse branch (if-then-else)
+			}
 			default -> {
 				error("Unrecognized command: " + peek().getTokenClass());
 				return null;
