@@ -4,6 +4,7 @@ import java.util.List;
 public class TreeNode<T> {
     private T data;  // Will be a Token in our case
     private final List<TreeNode<T>> children;
+	private final TreeNode<T> parent;
 	private boolean isTerminal;
 	private static int idCounter = 0;
 	private final int id;
@@ -13,6 +14,17 @@ public class TreeNode<T> {
 		this.children = new ArrayList<>();
 		this.isTerminal = true; // True until a children are added
 		this.id = idCounter++;
+		this.parent = null;
+	}
+
+	public void setParent(TreeNode<T> p) {
+		if (this.parent != null) {
+			throw new IllegalArgumentException("Parent already set");
+		}
+	}
+
+	public TreeNode<T> getParent() {
+		return parent;
 	}
 
 	public int getId() {
