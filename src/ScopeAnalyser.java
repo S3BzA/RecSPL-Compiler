@@ -1,6 +1,4 @@
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 public class ScopeAnalyser {
 
@@ -19,12 +17,12 @@ public class ScopeAnalyser {
 
     public void PopulateTree(){
         DfsBuild(rootTreeNode);
-        DfsPopulateVars(rootTreeNode);
+        DfsPopulateVar(rootTreeNode);
         scopeTree.printScopeTreeAndTables();
     }
 
     //Helpers
-    
+
     //phase 1
     public void DfsBuild(TreeNode<Token> node) {
         if (node == null) {
@@ -47,7 +45,7 @@ public class ScopeAnalyser {
     }
     
     //phase 2
-    public void DfsPopulateVars(TreeNode<Token> node){
+    public void DfsPopulateVar(TreeNode<Token> node){
         if (node == null) {
             return;
         }
@@ -61,10 +59,12 @@ public class ScopeAnalyser {
         List<TreeNode<Token>> children = node.getChildren();
         if (children != null) {
             for (TreeNode<Token> child : children) {
-                DfsPopulateVars(child); // Recursive call for each child
+                DfsPopulateVar(child); // Recursive call for each child
             }
         }
     }
 
     //Phase 3 Analyse using variable lookups if var use is correct !will error if functions and variables are incorrectly called and used
+    public void DfsVerifyVarUse(TreeNode<Token> node){}
+    public void DfsVerifyFuncUse(TreeNode<Token> node){}
 }
