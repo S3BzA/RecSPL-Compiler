@@ -118,6 +118,7 @@ public class Parser {
 		while (peek() != null && !peek().getWord().equals("end")) {
 			instrucNode.addChild(parseCommand()); // Parse a command
 			instrucNode.addChild(new TreeNode<>(match(TokenType.SCOLON))); // Match ';'
+			instrucNode.addChild(parseInstruc()); // Recursively parse more instructions
 		}
 
 		return instrucNode;
