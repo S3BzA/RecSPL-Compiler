@@ -1,4 +1,5 @@
 
+import com.sun.source.tree.Tree;
 import java.util.List;
 
 public class Parser {
@@ -436,12 +437,16 @@ public class Parser {
 
 	// PROLOG ::= {
 	private TreeNode<Token> parseProlog() {
-		return new TreeNode<>(match(TokenType.LBRACE)); // Match '{'
+		TreeNode<Token> prologNode = new TreeNode<>(new Token(-1, TokenType.V, "PROLOG")); // Non-terminal node
+		prologNode.addChild(new TreeNode<>(match(TokenType.LBRACE))); // Match '{'
+		return prologNode;
 	}
 
 	// EPILOG ::= }
 	private TreeNode<Token> parseEpilog() {
-		return new TreeNode<>(match(TokenType.RBRACE)); // Match '}'
+		TreeNode<Token> epilogNode = new TreeNode<>(new Token(-1, TokenType.V, "EPILOG")); // Non-terminal node
+		epilogNode.addChild(new TreeNode<>(match(TokenType.RBRACE))); // Match '}'
+		return epilogNode;
 	}
 
 	// LOCVARS ::= VTYP VNAME , VTYP VNAME , VTYP VNAME ,
