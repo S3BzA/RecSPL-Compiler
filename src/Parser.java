@@ -83,10 +83,11 @@ public class Parser {
 		TreeNode<Token> globVarsNode = new TreeNode<>(new Token(-1, TokenType.V, "GLOBVARS")); // Non-terminal node
 
 		while (peek() != null && (peek().getWord().equals("num") || peek().getWord().equals("text"))) {
-			TreeNode<Token> vtypNode = new TreeNode<>(match(TokenType.fromString(peek().getWord()))); // Match VTYP (num
-																										// | text)
+			TreeNode<Token> vtypNode = new TreeNode<>(new Token(-1, TokenType.V, "VTYP")); // Match VTYP (num | text)
+			vtypNode.addChild(new TreeNode<>(match(TokenType.fromString(peek().getWord()))));
 			globVarsNode.addChild(vtypNode);
-			TreeNode<Token> vnameNode = new TreeNode<>(match(TokenType.V)); // Match VNAME (V-Token)
+			TreeNode<Token> vnameNode = new TreeNode<>(new Token(-1, TokenType.V, "VNAME")); // Match VNAME (V-Token)
+			vnameNode.addChild(new TreeNode<>(match(TokenType.V))); // Match VNAME (V-Token)
 			globVarsNode.addChild(vnameNode);
 
 			if (peek() != null && peek().getTokenClass().equals("COMMA")) {
@@ -162,7 +163,9 @@ public class Parser {
 			switch (current) {
 				case V -> {
 					TreeNode<Token> atomicNode = new TreeNode<>(new Token(-1, TokenType.V, "ATOMIC")); // Non-terminal node
-					atomicNode.addChild(new TreeNode<>(match(TokenType.V))); // Match V-Token (variable name)
+					TreeNode<Token> vnameNode = new TreeNode<>(new Token(-1, TokenType.V, "VNAME")); // Non-terminal node
+					vnameNode.addChild(new TreeNode<>(match(TokenType.V))); // Match V-Token (variable name)
+					atomicNode.addChild(vnameNode);
 					return atomicNode;
 				}
 				case N, T -> {
@@ -184,7 +187,9 @@ public class Parser {
 	// ASSIGN ::= VNAME < input | VNAME = TERM
 	private TreeNode<Token> parseAssign() {
 		TreeNode<Token> assignNode = new TreeNode<>(new Token(-1, TokenType.V, "ASSIGN")); // Non-terminal node
-		assignNode.addChild(new TreeNode<>(match(TokenType.V))); // Match variable (VNAME)
+		TreeNode<Token> vnameNode = new TreeNode<>(new Token(-1, TokenType.V, "VNAME")); // Non-terminal node
+		vnameNode.addChild(new TreeNode<>(match(TokenType.V))); // Match variable (VNAME)
+		assignNode.addChild(vnameNode);
 		switch (peek().getWord()) {
 			case "< input" -> assignNode.addChild(new TreeNode<>(match(TokenType.INPUT))); // Match '< input'
 			case "=" -> {
@@ -200,7 +205,9 @@ public class Parser {
 	// CALL ::= FNAME(ATOMIC, ATOMIC, ATOMIC)
 	private TreeNode<Token> parseCall() {
 		TreeNode<Token> callNode = new TreeNode<>(new Token(-1, TokenType.V, "CALL")); // Non-terminal node
-		callNode.addChild(new TreeNode<>(match(TokenType.F))); // Match function name (F-Token)
+		TreeNode<Token> fnameNode = new TreeNode<>(new Token(-1, TokenType.V, "FNAME")); // Non-terminal node
+		fnameNode.addChild(new TreeNode<>(match(TokenType.F))); // Match function name (F-Token)
+		callNode.addChild(fnameNode);
 
 		callNode.addChild(new TreeNode<>(match(TokenType.LPAREN))); // Match '('
 
@@ -389,14 +396,31 @@ public class Parser {
 	// HEADER ::= FTYP FNAME(VNAME, VNAME, VNAME)
 	private TreeNode<Token> parseHeader() {
 		TreeNode<Token> headerNode = new TreeNode<>(new Token(-1, TokenType.V, "HEADER")); // Non-terminal node
-		headerNode.addChild(new TreeNode<>(match(TokenType.fromString(peek().getWord())))); // Match function type (num | void)
-		headerNode.addChild(new TreeNode<>(match(TokenType.F))); // Match function name (FNAME)
+		
+		TreeNode<Token> ftypeNode = new TreeNode<>(new Token(-1, TokenType.V, "FTYPE")); // Non-terminal node
+		ftypeNode.addChild(new TreeNode<>(match(TokenType.fromString(peek().getWord())))); // Match function type (num | void)
+		headerNode.addChild(ftypeNode);
+		TreeNode<Token> fnameNode = new TreeNode<>(new Token(-1, TokenType.V, "FNAME")); // Non-terminal node
+		fnameNode.addChild(new TreeNode<>(match(TokenType.F))); // Match function name (FNAME)
+		headerNode.addChild(fnameNode);
 		headerNode.addChild(new TreeNode<>(match(TokenType.LPAREN))); // Match '('
-		headerNode.addChild(new TreeNode<>(match(TokenType.V))); // Match first variable name (VNAME)
+
+		TreeNode<Token> v1Node = new TreeNode<>(new Token(-1, TokenType.V, "VNAME")); // Non-terminal node
+		v1Node.addChild(new TreeNode<>(match(TokenType.V))); // Match first variable name (VNAME)
+		headerNode.addChild(v1Node);
+
 		headerNode.addChild(new TreeNode<>(match(TokenType.COMMA)));
-		headerNode.addChild(new TreeNode<>(match(TokenType.V))); // Match second variable name (VNAME)
+
+		TreeNode<Token> v2Node = new TreeNode<>(new Token(-1, TokenType.V, "VNAME")); // Non-terminal node
+		v2Node.addChild(new TreeNode<>(match(TokenType.V))); // Match second variable name (VNAME)
+		headerNode.addChild(v2Node);
+
 		headerNode.addChild(new TreeNode<>(match(TokenType.COMMA)));
-		headerNode.addChild(new TreeNode<>(match(TokenType.V))); // Match third variable name (VNAME)
+
+		TreeNode<Token> v3Node = new TreeNode<>(new Token(-1, TokenType.V, "VNAME")); // Non-terminal node
+		v3Node.addChild(new TreeNode<>(match(TokenType.V))); // Match third variable name (VNAME)
+		headerNode.addChild(v3Node);
+
 		headerNode.addChild(new TreeNode<>(match(TokenType.RPAREN))); // Match ')'
 		return headerNode;
 	}
@@ -428,8 +452,13 @@ public class Parser {
 		TreeNode<Token> locVarsNode = new TreeNode<>(new Token(-1, TokenType.V, "LOCVARS")); // Non-terminal node
 
 		while (peek() != null && (peek().getWord().equals("num") || peek().getWord().equals("text"))) {
-			locVarsNode.addChild(new TreeNode<>(match(TokenType.fromTokenType(peek().getTokenClass())))); // Match variable type (VTYP)
-			locVarsNode.addChild(new TreeNode<>(match(TokenType.V))); // Match variable name (VNAME)
+			TreeNode<Token> vtypNode = new TreeNode<>(new Token(-1, TokenType.V, "VTYP")); // Non-terminal node
+			vtypNode.addChild(new TreeNode<>(match(TokenType.fromTokenType(peek().getTokenClass())))); // Match variable type (VTYP)
+			locVarsNode.addChild(vtypNode);
+
+			TreeNode<Token> vnameNode = new TreeNode<>(new Token(-1, TokenType.V, "VNAME")); // Non-terminal node
+			vnameNode.addChild(new TreeNode<>(match(TokenType.V))); // Match variable name (VNAME)
+			locVarsNode.addChild(vnameNode);
 			locVarsNode.addChild(new TreeNode<>(match(TokenType.COMMA))); // Match ','
 		}
 
