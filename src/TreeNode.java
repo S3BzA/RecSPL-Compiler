@@ -17,6 +17,14 @@ public class TreeNode<T> {
 		this.parent = null;
 	}
 
+	public TreeNode(T data, TreeNode<T> parent) {
+		this.data = data;
+		this.children = new ArrayList<>();
+		this.isTerminal = true; // True until a children are added
+		this.id = idCounter++;
+		this.parent = parent;
+	}
+
 	public void setParent(TreeNode<T> p) {
 		if (this.parent != null) {
 			throw new IllegalArgumentException("Parent already set");
@@ -89,7 +97,7 @@ public class TreeNode<T> {
 
 	public void printTree(String prefix, boolean isTail) {
         // Print the current node's data (will use Token's toString method)
-        System.out.println(prefix + (isTail ? "└── " : "├── ") + data.toString());
+        System.out.println(prefix + (isTail ? "└── " : "├── ") + data.toString() + "-[" + id + "]");
 
         // Iterate over the children
         if (children != null) {
