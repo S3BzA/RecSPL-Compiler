@@ -15,10 +15,11 @@ public class ScopeAnalyser {
         //can manually test scope bindings
     }
 
-    public void PopulateTree(){
+    public ScopeTree PopulateTree(){
         DfsBuild(rootTreeNode);
         DfsPopulateVar(rootTreeNode);
         scopeTree.printScopeTreeAndTables();
+        return this.scopeTree;
     }
 
     //Helpers
