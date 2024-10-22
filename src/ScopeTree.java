@@ -85,6 +85,13 @@ public class ScopeTree {
      return false;
     }
 
+    public Boolean IsProgNode(TreeNode<Token> tok){
+        if (tok.getData().getWord() == "PROG" && tok.getData().getId() ==-1){
+            return true;
+         }
+         return false;
+    }
+
     public String FindDeclName(TreeNode<Token> tok){
         if (tok == null){
             throw new RuntimeException("Invalid declaration name fetch attempt node is null");

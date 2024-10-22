@@ -1,6 +1,6 @@
 main 
 	num V_number, text V_text,
-    begin
+begin
 		V_number < input;
         V_number = add(V_number, 1);
 

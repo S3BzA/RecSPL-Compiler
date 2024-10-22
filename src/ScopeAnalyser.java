@@ -16,6 +16,8 @@ public class ScopeAnalyser {
     }
 
     public ScopeTree PopulateTree(){
+        //must first verify returns are correct semantically
+        DfsVerifyReturns(rootTreeNode);
         DfsBuild(rootTreeNode);
         DfsPopulateVar(rootTreeNode);
         System.out.println("");
@@ -116,6 +118,40 @@ public class ScopeAnalyser {
         if (children != null) {
             for (TreeNode<Token> child : children) {
                 DfsVerifyFuncUse(child); // Recursive call for each child
+            }
+        }
+    }
+
+    //TODO: implement
+    public void DfsVerifyReturns(TreeNode<Token> node){
+
+        if (node == null) {
+            return;
+        }
+
+        if (scopeTree.IsProgNode(node)){
+            //ensure no return in main algo anywhere
+        }
+
+        if (scopeTree.IsDeclNode(node)){
+            String type = scopeTree.FindDeclType(node);
+
+            if (type.equals("void")){
+                //ensure there are no returns in the algo for void anywhere
+                System.out.println(node.getData().getWord());
+                System.out.println(type);
+            }else{
+                //ensure there is one return and its at the end of algo
+                System.out.println(node.getData().getWord());
+                System.out.println(type);
+            }
+        }
+    
+        // Recursively visit all the children
+        List<TreeNode<Token>> children = node.getChildren();
+        if (children != null) {
+            for (TreeNode<Token> child : children) {
+                DfsVerifyReturns(child); // Recursive call for each child
             }
         }
     }
