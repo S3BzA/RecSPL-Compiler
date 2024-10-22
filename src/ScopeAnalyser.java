@@ -24,6 +24,7 @@ public class ScopeAnalyser {
         Ansi.printlnFormatted(Ansi.green("Variable Usage..."));
         DfsVerifyVarUse(rootTreeNode);
         Ansi.printlnFormatted(Ansi.green("Function Usage..."));
+        DfsVerifyFuncUse(rootTreeNode);
         return this.scopeTree;
     }
 
@@ -94,5 +95,25 @@ public class ScopeAnalyser {
         }
     }
     
-    public void DfsVerifyFuncUse(TreeNode<Token> node){}
+    public void DfsVerifyFuncUse(TreeNode<Token> node){
+        if (node == null) {
+            return;
+        }
+
+        if (scopeTree.IsFuncUsage(node)){
+            scopeTree.CalculateScope(node);
+            Symbol s =scopeTree.GetCurrentSymbolTable().LookupFunc(node.getData().getWord());
+            //comment out to remove printing
+            Ansi.printlnFormatted(("\nScope Name: " +scopeTree.GetCurrentSymbolTable().GetScopeName()));
+            System.out.println("    "+node.getData().getWord()+" Symbol: "+s);
+        }
+    
+        // Recursively visit all the children
+        List<TreeNode<Token>> children = node.getChildren();
+        if (children != null) {
+            for (TreeNode<Token> child : children) {
+                DfsVerifyFuncUse(child); // Recursive call for each child
+            }
+        }
+    }
 }

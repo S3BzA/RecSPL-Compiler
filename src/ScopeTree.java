@@ -178,6 +178,22 @@ public class ScopeTree {
     }
     
     public Boolean IsFuncUsage(TreeNode<Token> tok){
+            if (tok.getData().getTokenClass().equals("F") && (tok.getData().getId() != -1)){
+
+                TreeNode<Token> parent = tok.getParent();
+                if (parent == null){
+                    throw new RuntimeException("Parent is null when checking var declaration");
+                }
+
+                TreeNode<Token> parentParent = parent.getParent();
+                if (parentParent == null){
+                    throw new RuntimeException("Parent is null when checking var declaration");
+                }
+
+                if (!IsDeclNode(parentParent.getParent())){
+                    return true;
+                }
+            }
         return false;
     }
     //Printing
@@ -204,36 +220,74 @@ public class ScopeTree {
     }
 
     private void printScopeDetails(SymbolTable node) {
-        System.out.println("\nScope Name: " + node.GetScopeName());
-
-        // Print functions
+        // Collect the content lines
+        List<String> contentLines = new ArrayList<>();
+    
+        // First line: Scope Name
+        contentLines.add("Scope Name: " + node.GetScopeName());
+    
+        // Functions
         Map<String, Symbol> fTable = node.getFTable();
         if (!fTable.isEmpty()) {
-            System.out.println("Functions:");
+            contentLines.add("Functions:");
             for (Map.Entry<String, Symbol> entry : fTable.entrySet()) {
-                Ansi.printlnFormatted(Ansi.purple("   " + entry.getKey() + " : " + entry.getValue()));
+                contentLines.add(Ansi.purple("   " + entry.getKey() + " : " + entry.getValue()));
             }
         } else {
-            System.out.println("Functions: ");
-            Ansi.printlnFormatted(Ansi.purple("   "+"None"));
+            contentLines.add("Functions:");
+            contentLines.add(Ansi.purple("   None"));
         }
-
-        // Print variables
+    
+        // Variables
         Map<String, Symbol> vTable = node.getVTable();
         if (!vTable.isEmpty()) {
-            System.out.println("Variables:");
+            contentLines.add("Variables:");
             for (Map.Entry<String, Symbol> entry : vTable.entrySet()) {
-                Ansi.printlnFormatted(Ansi.cyan("   " + entry.getKey() + " : " + entry.getValue()));
+                contentLines.add(Ansi.cyan("   " + entry.getKey() + " : " + entry.getValue()));
             }
         } else {
-            System.out.println("Variables: ");
-            Ansi.printlnFormatted(Ansi.cyan("   "+"None"));
+            contentLines.add("Variables:");
+            contentLines.add(Ansi.cyan("   None"));
         }
-
+    
+        // Compute the maximum line length (excluding ANSI codes)
+        int maxLength = 0;
+        for (String line : contentLines) {
+            int length = stripAnsiCodes(line).length();
+            if (length > maxLength) {
+                maxLength = length;
+            }
+        }
+    
+        // Total length includes borders and padding
+        int totalLength = maxLength + 4;
+    
+        // Construct the top and bottom border lines
+        String borderLine = "+" + "-".repeat(totalLength - 2) + "+";
+    
+        // Print the top border line
+        System.out.println(borderLine);
+    
+        // Print each line within borders
+        for (String line : contentLines) {
+            String strippedLine = stripAnsiCodes(line);
+            int lineLength = strippedLine.length();
+            int paddingLength = totalLength - 4 - lineLength;
+            String padding = " ".repeat(Math.max(paddingLength, 0));
+            String formattedLine = "| " + line + padding + " |";
+            System.out.println(formattedLine);
+        }
+    
+        // Print the bottom border line
+        System.out.println(borderLine);
+    
         // Recursively print details of child scopes
         for (SymbolTable child : node.getChildren()) {
             printScopeDetails(child);
         }
     }
-
+    
+    private String stripAnsiCodes(String str) {
+        return str.replaceAll("\\u001B\\[[;\\d]*m", "");
+    }
 }

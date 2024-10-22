@@ -1,6 +1,7 @@
 main num V_hello , num V_nope ,num V_a, num V_b,num V_c,num V_d,num V_e,num V_f, num V_x,
 begin
     print V_nope ;
+    F_fun (2,2,2);
 end
 
 void F_fun ( V_a , V_b , V_c ) {
@@ -17,14 +18,14 @@ void F_fun2 ( V_a , V_b , V_c ) {
         F_fun2 ( 2 , 2 , 2 ) ;
     end
 }
-end
 
 void F_fun3 ( V_a , V_b , V_c ) {
     num V_d , num V_e , num V_f ,
     begin
-        F_fun2 ( 2 , 2 , 2 ) ;
+        F_fun3 ( 2 , 2 , 2 ) ;
         print V_x ;
     end
 }
+end
 end
 end
