@@ -25,6 +25,7 @@ public class ScopeAnalyser {
         DfsVerifyVarUse(rootTreeNode);
         Ansi.printlnFormatted(Ansi.green("Function Usage..."));
         DfsVerifyFuncUse(rootTreeNode);
+        scopeTree.ResetTreeToRoot();
         return this.scopeTree;
     }
 
@@ -39,7 +40,8 @@ public class ScopeAnalyser {
         if (scopeTree.IsDeclNode(node)){
             scopeTree.CalculateScope(node);
             String functionName = scopeTree.FindDeclName(node);
-            scopeTree.GetCurrentSymbolTable().BindFunc(functionName, nameGen.getFunName(), "");
+            String type = scopeTree.FindDeclType(node);
+            scopeTree.GetCurrentSymbolTable().BindFunc(functionName, nameGen.getFunName(), type);
         }
     
         // Recursively visit all the children

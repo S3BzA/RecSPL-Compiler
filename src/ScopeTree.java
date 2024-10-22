@@ -11,6 +11,10 @@ public class ScopeTree {
         this.curSymbolTable = this.root;
     }
 
+    public void ResetTreeToRoot(){
+        this.curSymbolTable = this.root;
+    }
+
     public Boolean EnterScope(String scopeName){
         if (curSymbolTable.getChild(scopeName) == null){
             throw new RuntimeException("Invalid entry of scope: "+scopeName);
@@ -138,6 +142,64 @@ public class ScopeTree {
         return functionNameToken.getWord();
     }
 
+    public String FindDeclType(TreeNode<Token> tok){
+        if (tok == null){
+            throw new RuntimeException("Invalid declaration name fetch attempt node is null");
+        }
+
+        if (!tok.getData().getWord().equals("DECL") || tok.getData().getId() != -1) {
+            throw new IllegalArgumentException("Expected DECL node");
+        }
+
+        List<TreeNode<Token>> declChildren = tok.getChildren();
+        if (declChildren == null || declChildren.isEmpty()) {
+            throw new IllegalArgumentException("DECL node does not have any children");
+        }
+
+        // Only inspect the immediate HEADER child of DECL
+        TreeNode<Token> headerNode = null;
+        for (TreeNode<Token> child : declChildren) {
+            if (child.getData().getWord().equals("HEADER") && child.getData().getId() == -1) {
+                headerNode = child;
+                break; // Only consider the first HEADER child
+            }
+        }
+
+        if (headerNode == null) {
+            throw new IllegalArgumentException("DECL node does not have a HEADER child");
+        }
+
+        List<TreeNode<Token>> headerChildren = headerNode.getChildren();
+        if (headerChildren == null || headerChildren.size() < 9) {
+            throw new IllegalArgumentException("HEADER node does not have expected children");
+        }
+
+        // According to the grammar, the HEADER has children: FTYP and FNAME
+        // We can directly access the second child, which should be FNAME
+        TreeNode<Token> ftypeNode = headerChildren.get(0);
+        if (!ftypeNode.getData().getWord().equals("FTYPE") || ftypeNode.getData().getId() != -1) {
+            throw new IllegalArgumentException("Expected FTYPE node as first child of HEADER");
+        }
+
+        // The FNAME node should have a terminal child with the function name
+        List<TreeNode<Token>> fnameChildren = ftypeNode.getChildren();
+        if (fnameChildren == null || fnameChildren.isEmpty()) {
+            throw new IllegalArgumentException("FNAME node does not have any children");
+        }
+
+        TreeNode<Token> functionTypeNode = fnameChildren.get(0);
+        Token functionTypeToken = functionTypeNode.getData();
+
+        // Ensure it's a terminal node (id != -1)
+        if (functionTypeToken.getId() == -1) {
+            throw new IllegalArgumentException("Expected terminal node with function name");
+        }
+
+        // Return the function name
+        return functionTypeToken.getWord();
+
+    }
+
     public Boolean IsVarDeclaration(TreeNode<Token> tok){
         //assuming tok is V with non negative id
         if (tok.getData().getTokenClass().equals("V") && (tok.getData().getId() != -1)){
@@ -168,6 +230,31 @@ public class ScopeTree {
 
     }
     
+    public String FindVarDeclType(TreeNode<Token> tok){
+
+        TreeNode<Token> parent = tok.getParent();
+        if (parent == null){
+            throw new RuntimeException("Parent is null when checking var declaration");
+        }
+        TreeNode<Token> parentParent = parent.getParent();
+        if (parentParent == null){
+            throw new RuntimeException("Parent is null when checking var declaration");
+        }
+
+        if (parent.getData().getWord() == "VNAME" && (parent.getData().getId() == -1)){
+            if (parentParent.getData().getWord() == "GLOBVARS" && (parentParent.getData().getId() == -1)){
+            }
+            if (parentParent.getData().getWord() == "LOCVARS" && (parentParent.getData().getId() == -1)){
+            }
+            if (parentParent.getData().getWord() == "HEADER" && (parentParent.getData().getId() == -1)){
+                return "num";
+            }
+        }
+
+        throw new RuntimeException("Type could not be resolved for var"+tok.getData().getWord());
+
+    }
+
     public Boolean IsVarUsage(TreeNode<Token> tok){
         if (!this.IsVarDeclaration(tok)){
             if (tok.getData().getTokenClass().equals("V") && (tok.getData().getId() != -1)){
