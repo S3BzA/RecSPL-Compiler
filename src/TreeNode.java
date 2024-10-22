@@ -113,7 +113,7 @@ public class TreeNode<T> {
 
 	public void printTree(String prefix, boolean isTail) {
 		// Print the current node's data (will use Token's toString method)
-		System.out.println(prefix + (isTail ? "└── " : "├── ") + data.toString() + "---[" + id + "]---" + "{parent: "+ (parent != null ? parent.getId()+"}": "null"));
+		System.out.println(prefix + (isTail ? "└── " : "├── ") + data.toString() + "---[" + id + "]");//---" + "{parent: "+ (parent != null ? parent.getId()+"}": "null"));
 
 		// Iterate over the children
 		if (children != null) {
