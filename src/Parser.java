@@ -257,7 +257,7 @@ public class Parser {
 	// TERM ::= ATOMIC | CALL | OP
 	private TreeNode<Token> parseTerm() {
 		TreeNode<Token> termNode = new TreeNode<>(new Token(-1, TokenType.V, "TERM")); // Non-terminal node
-		TokenType current = TokenType.fromString(peek().getTokenClass());
+		TokenType current = TokenType.fromTokenType(peek().getTokenClass());
 		switch (current) {
 			case V, N, T -> {
 				termNode.addChild(parseAtomic()); // If it's a variable or constant, parse it as atomic

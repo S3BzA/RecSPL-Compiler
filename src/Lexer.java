@@ -30,7 +30,7 @@ public class Lexer {
         System.out.println("Source code:\n" + sourceCode);
 
         // Updated regex pattern to include "< input" as a single token
-		String regex = "\\b(main|begin|end|skip|halt|print|return|num|text|void|if|then|else|not|sqrt|or|and|eq|grt|add|sub|mul|div)\\b|<\\s*input|V_[a-z]([a-z]|[0-9])*|F_[a-z]([a-z]|[0-9])*|\"[A-Z][a-z]{0,7}\"|[=(),{};]|0|0\\.[0-9]*[1-9]|-0\\.[0-9]*[1-9]|[1-9][0-9]*|-[1-9][0-9]*|[1-9][0-9]*\\.[0-9]*[1-9]|-[1-9][0-9]*\\.[0-9]*[1-9]";
+		String regex = "\\b(main|begin|end|skip|halt|print|return|num|text|void|if|then|else|not|sqrt|or|and|eq|grt|add|sub|mul|div)\\b|<\\s*input|V_[a-z]([a-z]|[0-9])*|F_[a-z]([a-z]|[0-9])*|\"[A-Z][a-z]{0,7}\"|[=(),{};]|0\\.[0-9]*[1-9]|-0\\.[0-9]*[1-9]|[1-9][0-9]*|-[1-9][0-9]*|[1-9][0-9]*\\.[0-9]*[1-9]|-[1-9][0-9]*\\.[0-9]*[1-9]|0";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(sourceCode);
         int tokenCounter = 1;
@@ -89,15 +89,16 @@ public class Lexer {
     }
 
     private boolean isNumberLiteral(String word) {
-        return word.matches("0|0\\.[0-9]*[1-9]|-0\\.[0-9]*[1-9]|[1-9][0-9]*|-[1-9][0-9]*|[1-9][0-9]*\\.[0-9]*[1-9]|-[1-9][0-9]*\\.[0-9]*[1-9]");
+        return word.matches("0\\.[0-9]*[1-9]|-0\\.[0-9]*[1-9]|[1-9][0-9]*|-[1-9][0-9]*|[1-9][0-9]*\\.[0-9]*[1-9]|-[1-9][0-9]*\\.[0-9]*[1-9]|0");
     }
 
     private void handleSyntaxError(String unmatched) {
         if (unmatched.matches("\"[A-Z][a-z]{8,}\"")) {
             throw new RuntimeException("Syntax Error: String literal invalid length: " + unmatched);
-        } else if (unmatched.matches("0|0\\.[0-9]*[1-9]|-0\\.[0-9]*[1-9]|[1-9][0-9]*|-[1-9][0-9]*|[1-9][0-9]*\\.[0-9]*[1-9]|-[1-9][0-9]*\\.[0-9]*[1-9]")) {
+        } else if (unmatched.matches("0\\.[0-9]*[1-9]|-0\\.[0-9]*[1-9]|[1-9][0-9]*|-[1-9][0-9]*|[1-9][0-9]*\\.[0-9]*[1-9]|-[1-9][0-9]*\\.[0-9]*[1-9]|0")) {
             throw new RuntimeException("Syntax Error: Invalid number literal: " + unmatched);
         } else {
+			System.out.println(this.toString());
             throw new RuntimeException("Syntax Error: Unrecognized token: " + unmatched);
         }
     }
