@@ -39,7 +39,7 @@ public class SymbolTable {
             // Bind the function in the current scope
             Symbol sym = new Symbol(toName, type);
             fTable.put(fromName, sym);
-            //add scope to children scope/open new scope can assume addchild will be error free
+            //add scope to children scope/open new scope
             this.AddChild(fromName);
         }
     }

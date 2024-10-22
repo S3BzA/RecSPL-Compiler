@@ -18,7 +18,12 @@ public class ScopeAnalyser {
     public ScopeTree PopulateTree(){
         DfsBuild(rootTreeNode);
         DfsPopulateVar(rootTreeNode);
+        System.out.println("");
+        Ansi.printlnFormatted(Ansi.green("Scope Tree and Tables..."));
         scopeTree.printScopeTreeAndTables();
+        Ansi.printlnFormatted(Ansi.green("Variable Usage..."));
+        DfsVerifyVarUse(rootTreeNode);
+        Ansi.printlnFormatted(Ansi.green("Function Usage..."));
         return this.scopeTree;
     }
 
@@ -66,6 +71,28 @@ public class ScopeAnalyser {
     }
 
     //Phase 3 Analyse using variable lookups if var use is correct !will error if functions and variables are incorrectly called and used
-    public void DfsVerifyVarUse(TreeNode<Token> node){}
+    public void DfsVerifyVarUse(TreeNode<Token> node){
+        //if is not var declaration but is a var with vname parent
+        if (node == null) {
+            return;
+        }
+
+        if (scopeTree.IsVarUsage(node)){
+            scopeTree.CalculateScope(node);
+            Symbol s =scopeTree.GetCurrentSymbolTable().LookupVar(node.getData().getWord());
+            //comment out to remove printing
+            Ansi.printlnFormatted(("\nScope Name: " +scopeTree.GetCurrentSymbolTable().GetScopeName()));
+            System.out.println("    "+node.getData().getWord()+" Symbol: "+s);
+        }
+    
+        // Recursively visit all the children
+        List<TreeNode<Token>> children = node.getChildren();
+        if (children != null) {
+            for (TreeNode<Token> child : children) {
+                DfsVerifyVarUse(child); // Recursive call for each child
+            }
+        }
+    }
+    
     public void DfsVerifyFuncUse(TreeNode<Token> node){}
 }

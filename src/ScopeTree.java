@@ -167,15 +167,28 @@ public class ScopeTree {
         return false;
 
     }
+    
+    public Boolean IsVarUsage(TreeNode<Token> tok){
+        if (!this.IsVarDeclaration(tok)){
+            if (tok.getData().getTokenClass().equals("V") && (tok.getData().getId() != -1)){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public Boolean IsFuncUsage(TreeNode<Token> tok){
+        return false;
+    }
     //Printing
 
     public void printScopeTreeAndTables() {
         // First, print the tree of scope names
-        System.out.println("Scope Tree:");
+        Ansi.printlnFormatted(Ansi.green("\nScope Tree:"));
         printScopeNames(root, "", true);
 
         // Then, print the details of each scope
-        System.out.println("\nScope Tables:");
+        Ansi.printlnFormatted(Ansi.green("\nScope Tables:"));
         printScopeDetails(root);
     }
 
@@ -198,10 +211,11 @@ public class ScopeTree {
         if (!fTable.isEmpty()) {
             System.out.println("Functions:");
             for (Map.Entry<String, Symbol> entry : fTable.entrySet()) {
-                System.out.println("   " + entry.getKey() + " : " + entry.getValue());
+                Ansi.printlnFormatted(Ansi.purple("   " + entry.getKey() + " : " + entry.getValue()));
             }
         } else {
-            System.out.println("Functions: None");
+            System.out.println("Functions: ");
+            Ansi.printlnFormatted(Ansi.purple("   "+"None"));
         }
 
         // Print variables
@@ -209,10 +223,11 @@ public class ScopeTree {
         if (!vTable.isEmpty()) {
             System.out.println("Variables:");
             for (Map.Entry<String, Symbol> entry : vTable.entrySet()) {
-                System.out.println("   " + entry.getKey() + " : " + entry.getValue());
+                Ansi.printlnFormatted(Ansi.cyan("   " + entry.getKey() + " : " + entry.getValue()));
             }
         } else {
-            System.out.println("Variables: None");
+            System.out.println("Variables: ");
+            Ansi.printlnFormatted(Ansi.cyan("   "+"None"));
         }
 
         // Recursively print details of child scopes
