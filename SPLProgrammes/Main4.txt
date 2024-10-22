@@ -16,6 +16,7 @@ num F_fun2 ( V_a , V_b , V_c ) {
     begin
         print V_x;
         F_fun2 ( 2 , 2 , 2 ) ;
+        return V_a;
     end
 }
 end

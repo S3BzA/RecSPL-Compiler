@@ -1,18 +1,5 @@
 main 
-	num V_number, text V_text,
 begin
-		V_number < input;
-        V_number = add(V_number, 1);
-
-        if eq(V_number , 1)
-        then 
-            begin
-            print "Voala";
-            end
-        else 
-            begin
-            end
-        ;
 end
 
 void F_fun ( V_a , V_b , V_c ) {

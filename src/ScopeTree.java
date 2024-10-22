@@ -86,7 +86,14 @@ public class ScopeTree {
     }
 
     public Boolean IsProgNode(TreeNode<Token> tok){
-        if (tok.getData().getWord() == "PROG" && tok.getData().getId() ==-1){
+        if (tok.getData().getWord().equals("PROG") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
+    public Boolean IsReturnNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("return") && (tok.getData().getTokenClass().equals("RETURN"))){
             return true;
          }
          return false;
@@ -340,6 +347,7 @@ public class ScopeTree {
             }
         return false;
     }
+    
     //Printing
 
     public void printScopeTreeAndTables() {

@@ -76,7 +76,7 @@ public class ScopeAnalyser {
         }
     }
 
-    //Phase 3 Analyse using variable lookups if var use is correct !will error if functions and variables are incorrectly called and used
+    //Phase 3 
     public void DfsVerifyVarUse(TreeNode<Token> node){
         //if is not var declaration but is a var with vname parent
         if (node == null) {
@@ -122,15 +122,18 @@ public class ScopeAnalyser {
         }
     }
 
-    //TODO: implement
+    //checking returns first
     public void DfsVerifyReturns(TreeNode<Token> node){
 
         if (node == null) {
             return;
         }
 
-        if (scopeTree.IsProgNode(node)){
-            //ensure no return in main algo anywhere
+        if (scopeTree.IsProgNode(node)) {
+            // Ensure no return in main ALGO anywhere
+            List<TreeNode<Token>> children = node.getChildren();
+            TreeNode<Token> algoNode = children.get(2);
+            DfsCheckMainReturns(algoNode);
         }
 
         if (scopeTree.IsDeclNode(node)){
@@ -138,12 +141,8 @@ public class ScopeAnalyser {
 
             if (type.equals("void")){
                 //ensure there are no returns in the algo for void anywhere
-                System.out.println(node.getData().getWord());
-                System.out.println(type);
             }else{
                 //ensure there is one return and its at the end of algo
-                System.out.println(node.getData().getWord());
-                System.out.println(type);
             }
         }
     
@@ -154,5 +153,24 @@ public class ScopeAnalyser {
                 DfsVerifyReturns(child); // Recursive call for each child
             }
         }
+    }
+
+    //helper
+    private void DfsCheckMainReturns(TreeNode<Token> node){
+        if (node == null) {
+            return;
+        }
+
+        if (scopeTree.IsReturnNode(node)) {
+            throw new RuntimeException("main function with return type: undefined contains a return");
+        }
+
+        List<TreeNode<Token>> children = node.getChildren();
+        if (children != null) {
+            for (TreeNode<Token> child : children) {
+                DfsCheckMainReturns(child); // Recursive call for each child
+            }
+        }
+
     }
 }
