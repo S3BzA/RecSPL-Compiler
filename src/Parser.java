@@ -338,7 +338,9 @@ public class Parser {
 	// UCOND ::= UNOP(SIMPLE)
 	private TreeNode<Token> parseUCond() {
 		TreeNode<Token> uCondNode = new TreeNode<>(new Token(-1, TokenType.V, "UCOND")); // Match 'not'
-		uCondNode.addChild(new TreeNode<>(match(TokenType.fromString(peek().getTokenClass())))); // Match 'not' or 'sqrt'
+		TreeNode<Token> unopNode = new TreeNode<>(new Token(-1, TokenType.V, "UNOP")); // Non-terminal node
+		unopNode.addChild(new TreeNode<>(match(TokenType.fromString(peek().getTokenClass())))); // Match 'not' or 'sqrt'
+		uCondNode.addChild(unopNode);
 		uCondNode.addChild(new TreeNode<>(match(TokenType.LPAREN))); // Match '('
 		uCondNode.addChild(parseSimple()); // Parse simple condition inside parentheses
 		uCondNode.addChild(new TreeNode<>(match(TokenType.RPAREN))); // Match ')'
@@ -348,7 +350,9 @@ public class Parser {
 	// BCOND ::= BINOP(BPARAM)
 	private TreeNode<Token> parseBCond() {
 		TreeNode<Token> bCondNode = new TreeNode<>(new Token(-1, TokenType.V, "BCOND")); // Non-terminal node
-		bCondNode.addChild(new TreeNode<>(match(TokenType.fromTokenType(peek().getTokenClass())))); // Match binary operator
+		TreeNode<Token> binopNode = new TreeNode<>(new Token(-1, TokenType.V, "BINOP")); // Non-terminal node
+		binopNode.addChild(new TreeNode<>(match(TokenType.fromTokenType(peek().getTokenClass())))); // Match binary operator
+		bCondNode.addChild(binopNode);
 		bCondNode.addChild(new TreeNode<>(match(TokenType.LPAREN))); // Match '('
 		bCondNode.addChild(parseBParam()); // Parse the binary parameters
 		bCondNode.addChild(new TreeNode<>(match(TokenType.RPAREN))); // Match ')'
@@ -381,7 +385,9 @@ public class Parser {
 	// SIMPLE ::= BINOP(ATOMIC,ATOMIC)
 	private TreeNode<Token> parseSimple() {
 		TreeNode<Token> simpleNode = new TreeNode<>(new Token(-1, TokenType.V, "SIMPLE")); // Non-terminal node
-		simpleNode.addChild(new TreeNode<>(match(TokenType.fromTokenType(peek().getTokenClass())))); // Match binary operator
+		TreeNode<Token> binopNode = new TreeNode<>(new Token(-1, TokenType.V, "BINOP")); // Non-terminal node
+		binopNode.addChild(new TreeNode<>(match(TokenType.fromTokenType(peek().getTokenClass())))); // Match binary operator
+		simpleNode.addChild(binopNode);
 		simpleNode.addChild(new TreeNode<>(match(TokenType.LPAREN))); // Match '('
 		simpleNode.addChild(parseAtomic()); // Parse first atomic argument
 		simpleNode.addChild(new TreeNode<>(match(TokenType.COMMA))); // Match ','
