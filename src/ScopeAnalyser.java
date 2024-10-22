@@ -61,7 +61,8 @@ public class ScopeAnalyser {
 
         if (scopeTree.IsVarDeclaration(node)){
             scopeTree.CalculateScope(node);
-            scopeTree.GetCurrentSymbolTable().BindVar(node.getData().getWord(), nameGen.getVarName(), "");
+            String type = scopeTree.FindVarDeclType(node);
+            scopeTree.GetCurrentSymbolTable().BindVar(node.getData().getWord(), nameGen.getVarName(), type);
         }
     
         // Recursively visit all the children

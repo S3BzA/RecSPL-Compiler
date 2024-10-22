@@ -174,8 +174,6 @@ public class ScopeTree {
             throw new IllegalArgumentException("HEADER node does not have expected children");
         }
 
-        // According to the grammar, the HEADER has children: FTYP and FNAME
-        // We can directly access the second child, which should be FNAME
         TreeNode<Token> ftypeNode = headerChildren.get(0);
         if (!ftypeNode.getData().getWord().equals("FTYPE") || ftypeNode.getData().getId() != -1) {
             throw new IllegalArgumentException("Expected FTYPE node as first child of HEADER");
@@ -232,6 +230,10 @@ public class ScopeTree {
     
     public String FindVarDeclType(TreeNode<Token> tok){
 
+        if (tok == null) {
+            throw new RuntimeException("Invalid declaration name fetch attempt node is null");
+        }
+
         TreeNode<Token> parent = tok.getParent();
         if (parent == null){
             throw new RuntimeException("Parent is null when checking var declaration");
@@ -242,10 +244,58 @@ public class ScopeTree {
         }
 
         if (parent.getData().getWord() == "VNAME" && (parent.getData().getId() == -1)){
+            
             if (parentParent.getData().getWord() == "GLOBVARS" && (parentParent.getData().getId() == -1)){
+                //get globvars children
+                List<TreeNode<Token>> globvarsChildren = parentParent.getChildren();
+                //get first child
+                TreeNode<Token> vtypeNode = globvarsChildren.get(0);
+                //get children of vtype
+                List<TreeNode<Token>> vtypeChildren = vtypeNode.getChildren();
+                //get first child
+                TreeNode<Token> varTypeNode = vtypeChildren.get(0);
+                //get data
+                Token varTypeToken = varTypeNode.getData();
+        
+                // Ensure it's a terminal node (id != -1)
+                if (varTypeToken.getId() == -1) {
+                    throw new IllegalArgumentException("Expected terminal node with function name");
+                }
+        
+                // Return the var name
+                return varTypeToken.getWord();
             }
+            
             if (parentParent.getData().getWord() == "LOCVARS" && (parentParent.getData().getId() == -1)){
+                //get locvars children
+                List<TreeNode<Token>> locvarsChildren = parentParent.getChildren();
+                
+                int indexOfVNAME = locvarsChildren.indexOf(parent);
+                if (indexOfVNAME == -1) {
+                    throw new RuntimeException("VNAME node not found among LOCVARS children");
+                }
+                if (indexOfVNAME == 0) {
+                    throw new RuntimeException("VNAME node is the first child, no left sibling");
+                }
+
+                TreeNode<Token> vtypNode = locvarsChildren.get(indexOfVNAME - 1);
+                if (!vtypNode.getData().getWord().equals("VTYP") || vtypNode.getData().getId() != -1) {
+                    throw new IllegalArgumentException("Expected VTYP node to the left of VNAME");
+                }
+
+                List<TreeNode<Token>> vtypChildren = vtypNode.getChildren();
+                if (vtypChildren == null || vtypChildren.isEmpty()) {
+                    throw new IllegalArgumentException("VTYP node does not have any children");
+                }
+
+                TreeNode<Token> varTypeNode = vtypChildren.get(0);
+                Token varTypeToken = varTypeNode.getData();
+                if (varTypeToken.getId() == -1) {
+                    throw new IllegalArgumentException("Expected terminal node with variable type");
+                }
+                return varTypeToken.getWord();
             }
+            
             if (parentParent.getData().getWord() == "HEADER" && (parentParent.getData().getId() == -1)){
                 return "num";
             }
