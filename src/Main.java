@@ -25,7 +25,8 @@ public class Main {
 	}
 
 	private static void printHelp() {
-		Ansi.printlnFormatted(Ansi.yellow("Usage: make all ARGS="+Ansi.italic("<file-path>")));
+		Ansi.printlnFormatted(Ansi.yellow("JAR Usage: java -jar ./path/to/Compiler.jar "+Ansi.italic("<file-path>")));
+		Ansi.printlnFormatted(Ansi.yellow("MAKE Usage: make all ARGS="+Ansi.italic("<file-path>")));
 		Ansi.printlnFormatted(Ansi.yellow("ARGS Options:"));
 		Ansi.printlnFormatted(Ansi.yellow("  --help, -h    Display this help menu."));
 		Ansi.printlnFormatted(Ansi.yellow("  path/to/file.txt   The path to the file you want to compile."));
