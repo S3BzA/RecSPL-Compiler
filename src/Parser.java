@@ -21,6 +21,9 @@ public class Parser {
 		}
 	}
 
+	public TreeNode<Token> getRoot(){
+		return root;
+	}
 	// Utility method to get the current token
 	private Token peek() {
 		if (position < tokens.size()) {
