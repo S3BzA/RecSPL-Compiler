@@ -145,6 +145,7 @@ public class TypeCheck {
                 if (TypeOf(vnameNode).equals(TypeOf(termNode))){
                     return true;
                 }else{
+                    System.out.println("ERROR IN HERE");
                     return false;
                 }
 
@@ -314,6 +315,12 @@ public class TypeCheck {
                 if (TypeOf(firstNode).equals("b")){
                     if (TypeOf(arg1Node).equals("b")){
                         return "b";
+                    }
+                }
+
+                if (TypeOf(firstNode).equals("num")){
+                    if (TypeOf(arg1Node).equals("num")){
+                        return "num";
                     }
                 }
 
@@ -492,8 +499,8 @@ public class TypeCheck {
             }
 
             if (TypeOf(binopNode).equals("c")){
-                if (TypeOf(atomic1Node).equals("n")){
-                    if (TypeOf(atomic2Node).equals("n")){
+                if (TypeOf(atomic1Node).equals("num")){
+                    if (TypeOf(atomic2Node).equals("num")){
                         return "b";
                     }
 
