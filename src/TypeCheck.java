@@ -92,7 +92,7 @@ public class TypeCheck {
                 String scopeName = scopeTree.GetCurrentSymbolTable().GetScopeName();
                 String funcType = scopeTree.GetCurrentSymbolTable().LookupFunc(scopeName).type;
 
-                if (TypeOf(atomicNode) == funcType){
+                if (TypeOf(atomicNode).equals(funcType)){
                     return true;
                 }else{
                     return false;
@@ -141,7 +141,7 @@ public class TypeCheck {
                 TreeNode<Token> vnameNode = children.get(0);
                 TreeNode<Token> termNode = children.get(2);
 
-                if (TypeOf(vnameNode)== TypeOf(termNode)){
+                if (TypeOf(vnameNode).equals(TypeOf(termNode))){
                     return true;
                 }else{
                     return false;
@@ -150,7 +150,12 @@ public class TypeCheck {
             }
             
         }
-        return true;
+       
+        if (scopeTree.IsBranchNode(node)){
+
+        }
+        
+        throw new RuntimeException("undefined CheckTypes call " + node.getData().getWord());
     }
 
     public String TypeOf(TreeNode<Token> node){
@@ -190,7 +195,128 @@ public class TypeCheck {
             }
         }
 
-        throw new RuntimeException("undefined typeof call");
+        if (scopeTree.IsCallNode(node)){
+            List<TreeNode<Token>> children = node.getChildren();
+            TreeNode<Token> atomic1 = children.get(2);
+            TreeNode<Token> atomic2 = children.get(4);
+            TreeNode<Token> atomic3 = children.get(6);
+            TreeNode<Token> fnameNode = children.get(0);
+
+            if (TypeOf(atomic1).equals("num")){
+                if (TypeOf(atomic2).equals("num")){
+                    if (TypeOf(atomic3).equals("num")){
+                        return TypeOf(fnameNode);
+                    }
+                }
+            }
+
+            return "u";
+
+        }
+
+        if (scopeTree.IsOpNode(node)){
+            List<TreeNode<Token>> children = node.getChildren();
+            TreeNode<Token> firstNode = children.get(0);
+            
+            if (firstNode.getData().getWord().equals("UNOP")){
+                TreeNode<Token> arg1Node = children.get(2);
+                if (TypeOf(firstNode).equals("b")){
+                    if (TypeOf(arg1Node).equals("b")){
+                        return "b";
+                    }
+                }
+
+            }
+
+            if (firstNode.getData().getWord().equals("BINOP")){
+                TreeNode<Token> arg1Node = children.get(2);
+                TreeNode<Token> arg2Node = children.get(4);
+                if (TypeOf(firstNode).equals("b")){
+                    if (TypeOf(arg1Node).equals("b")){
+                        if (TypeOf(arg2Node).equals("b")){
+                            return "b";
+                        }
+                    }
+                }
+
+                if (TypeOf(firstNode).equals("num")){
+                    if (TypeOf(arg1Node).equals("num")){
+                        if (TypeOf(arg2Node).equals("num")){
+                            return "num";
+                        }
+                    }
+                }
+            }
+
+            return "u";
+
+        }
+
+        if (scopeTree.IsArgNode(node)){
+            List<TreeNode<Token>> children = node.getChildren();
+            TreeNode<Token> firstNode = children.get(0);
+
+            return TypeOf(firstNode);
+        }
+
+        if (scopeTree.IsUnopNode(node)){
+            List<TreeNode<Token>> children = node.getChildren();
+            TreeNode<Token> firstNode = children.get(0);
+
+            if (firstNode.getData().getWord().equals("not")){
+                return "b";
+            }
+
+            if (firstNode.getData().getWord().equals("sqrt")){
+                return "num";
+            }
+        }
+
+        if (scopeTree.IsBinopNode(node)){
+
+            List<TreeNode<Token>> children = node.getChildren();
+            TreeNode<Token> firstNode = children.get(0);
+
+            if (firstNode.getData().getWord().equals("or")){
+                return "b";
+            }
+
+            if (firstNode.getData().getWord().equals("and")){
+                return "b";
+            }
+            
+            
+            if (firstNode.getData().getWord().equals("eq")){
+                return "c";
+            }
+
+
+            if (firstNode.getData().getWord().equals("grt")){
+                return "c";
+            }
+
+
+            if (firstNode.getData().getWord().equals("add")){
+                return "num";
+            }
+
+
+            if (firstNode.getData().getWord().equals("sub")){
+                return "num";
+            }
+
+
+            if (firstNode.getData().getWord().equals("mul")){
+                return "num";
+            }
+
+
+            if (firstNode.getData().getWord().equals("div")){
+                return "num";
+            }
+        }
+
+        throw new RuntimeException("undefined typeof call "+ node.getData().getWord());
     }
     
 }

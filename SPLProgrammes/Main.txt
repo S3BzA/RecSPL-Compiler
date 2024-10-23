@@ -2,6 +2,7 @@ main num V_a, num V_b , num V_c,
 begin
     skip;
     halt;
+    V_a = 1;
     print V_a;
     print "Hello";
     print 1;

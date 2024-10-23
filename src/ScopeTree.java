@@ -80,6 +80,41 @@ public class ScopeTree {
     
     //node tests
 
+    public Boolean IsBinopNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("BINOP") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
+    public Boolean IsUnopNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("UNOP") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
+    public Boolean IsArgNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("ARG") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
+    public Boolean IsOpNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("OP") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
+    public Boolean IsCallNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("CALL") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
     public Boolean IsTermNode(TreeNode<Token> tok){
         if (tok.getData().getWord().equals("TERM") && (tok.getData().getId() ==-1)){
             return true;
