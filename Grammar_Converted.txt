@@ -18,9 +18,13 @@ ATOMIC ::= VNAME
 ATOMIC ::= CONST
 CONST ::= N-Token
 CONST ::= T-Token
+ASSIGN ::= VNAME < input
+ASSIGN ::= VNAME = TERM
+//----------------------- NOT USING
 ASSIGN ::= VNAME ASSIGNOP
 ASSIGNOP ::= < input
 ASSIGNOP ::= = Term
+//-----------------------
 CALL ::= FNAME(ATOMIC, ATOMIC, ATOMIC)
 BRANCH ::= if COND then ALGO else ALGO
 TERM ::= ATOMIC

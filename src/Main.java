@@ -18,6 +18,9 @@ public class Main {
 			Parser parser = new Parser(lexer.getTokens());
 			parser.parse();
 			parser.printSyntaxTree();
+			ScopeAnalyser scopeAnalyser = new ScopeAnalyser(parser.getRoot());
+			Ansi.printlnFormatted(Ansi.green("Building Symbol Table and Analysing usage..."));
+			ScopeTree scopes = scopeAnalyser.PopulateTree();
 		} catch (Exception e) {
 			Ansi.printlnFormatted(Ansi.red("Error: " + e.getMessage()));
 			e.printStackTrace();

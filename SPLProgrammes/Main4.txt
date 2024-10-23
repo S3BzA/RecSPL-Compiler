@@ -1,0 +1,32 @@
+main num V_hello , num V_nope ,num V_a, num V_b,num V_c,num V_d,num V_e,num V_f, num V_x,
+begin
+    print V_nope ;
+    F_fun (V_a,V_b,V_c);
+end
+
+void F_fun ( V_a , V_b , V_c ) {
+    text V_x , num V_e , num V_f ,
+    begin
+        F_fun ( V_x , 2 , 2 ) ;
+    end
+}
+
+num F_fun2 ( V_a , V_b , V_c ) {
+    num V_d , num V_e , num V_f ,
+    begin
+        print V_x;
+        F_fun2 ( 2 , 2 , 2 ) ;
+        return V_a;
+    end
+}
+end
+
+void F_fun3 ( V_a , V_b , V_c ) {
+    num V_d , num V_e , num V_f ,
+    begin
+        F_fun3 ( 2 , 2 , 2 ) ;
+        print V_x ;
+    end
+}
+end
+end

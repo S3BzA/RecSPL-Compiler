@@ -1,11 +1,18 @@
-main {
-    text V_message,
-	num V_number,
+main 
+begin
+end
+
+void F_fun ( V_a , V_b , V_c ) {
+    text V_d , text V_e , num V_f ,
     begin
-        V_message = "Hello",
-		V_number < input,
-        print V_message,
-		return V_number,
-		halt
+        F_fun ( 2 , 2 , 2 ) ;
     end
 }
+end
+
+num F_fun2 (V_a, V_b, V_c){
+    text V_d , text V_e , num V_f ,
+    begin
+    end
+}
+end
