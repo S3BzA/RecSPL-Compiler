@@ -79,6 +79,85 @@ public class ScopeTree {
     }
     
     //node tests
+    public Boolean IsFnameNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("FNAME") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
+    public Boolean IsSubfuncsNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("SUBFUNCS") && tok.getData().getId() ==-1){
+           return true;
+        }
+        return false;
+    }
+
+    public Boolean IsLocvarsNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("LOCVARS") && tok.getData().getId() ==-1){
+           return true;
+        }
+        return false;
+    }
+
+    public Boolean IsEpilogNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("EPILOG") && tok.getData().getId() ==-1){
+           return true;
+        }
+        return false;
+    }
+
+    public Boolean IsPrologNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("PROLOG") && tok.getData().getId() ==-1){
+           return true;
+        }
+        return false;
+    }
+
+
+    public Boolean IsBodyNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("BODY") && tok.getData().getId() ==-1){
+           return true;
+        }
+        return false;
+    }
+
+    public Boolean IsHeaderNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("HEADER") && tok.getData().getId() ==-1){
+           return true;
+        }
+        return false;
+       }
+
+    public Boolean IsSimpleNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("SIMPLE") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
+
+    public Boolean IsBcondNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("BCOND") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
+    public Boolean IsUcondNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("UCOND") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
+    public Boolean IsCondNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("COND") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
     public Boolean IsBranchNode(TreeNode<Token> tok){
         if (tok.getData().getWord().equals("BRANCH") && (tok.getData().getId() ==-1)){
             return true;
@@ -137,7 +216,7 @@ public class ScopeTree {
     }
 
     public Boolean IsDeclNode(TreeNode<Token> tok){
-     if (tok.getData().getWord() == "DECL" && tok.getData().getId() ==-1){
+     if (tok.getData().getWord().equals("DECL") && tok.getData().getId() ==-1){
         return true;
      }
      return false;

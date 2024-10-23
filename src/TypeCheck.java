@@ -14,7 +14,9 @@ public class TypeCheck {
     public void AnalyseTypes(){
        Boolean correct =  CheckTypes(rootTreeNode);
         if (!correct){
-            throw new RuntimeException("TypeCheck Failed");
+            throw new RuntimeException("TypeCheck Failed: types are incorrect");
+        }else{
+            System.out.println("TypeCheck Passed: types are correct");
         }
     }
 
@@ -153,8 +155,88 @@ public class TypeCheck {
        
         if (scopeTree.IsBranchNode(node)){
             List<TreeNode<Token>> children = node.getChildren();
+            TreeNode<Token> condNode = children.get(1);
+            TreeNode<Token> algo1Node = children.get(3);
+            TreeNode<Token> algo2Node = children.get(5);
+
+            if (TypeOf(condNode).equals("b")){
+                return (CheckTypes(algo1Node) && CheckTypes(algo2Node));
+            }else{
+                return false;
+            }
 
         }
+
+        if (scopeTree.IsFunctionsNode(node)){
+            List<TreeNode<Token>> children = node.getChildren();
+
+            if (children == null || children.isEmpty()){
+                return true;
+            }else{
+                TreeNode<Token> declNode = children.get(0);
+                TreeNode<Token> functions2Node = children.get(1);
+
+                return (CheckTypes(declNode) && CheckTypes(functions2Node));
+
+            }
+        }
+
+        if (scopeTree.IsDeclNode(node)){
+            List<TreeNode<Token>> children = node.getChildren();
+
+            TreeNode<Token> headerNode = children.get(0);
+            TreeNode<Token> bodyNode = children.get(1);
+
+            return (CheckTypes(headerNode) && CheckTypes(bodyNode));
+        }
+
+        if (scopeTree.IsHeaderNode(node)){
+            List<TreeNode<Token>> children = node.getChildren();
+            TreeNode<Token> vname1 = children.get(3);
+            TreeNode<Token> vname2 = children.get(5);
+            TreeNode<Token> vname3 = children.get(7);
+
+            if (TypeOf(vname1).equals("num")){
+                if (TypeOf(vname2).equals("num")){
+                    if (TypeOf(vname3).equals("num")){
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        if (scopeTree.IsBodyNode(node)){
+            List<TreeNode<Token>> children = node.getChildren();
+            TreeNode<Token> prologNode = children.get(0);
+            TreeNode<Token> locvarsNode = children.get(1);
+            TreeNode<Token> algoNode = children.get(2);
+            TreeNode<Token> epilogNode = children.get(3);
+            TreeNode<Token> subfuncsNode = children.get(4);
+
+            return (CheckTypes(prologNode) && CheckTypes(locvarsNode) && CheckTypes(algoNode) && CheckTypes(epilogNode) && CheckTypes(subfuncsNode));
+        }
+
+        if (scopeTree.IsPrologNode(node)){
+            return true;
+        }
+
+        if (scopeTree.IsEpilogNode(node)){
+            return true;
+        }
+
+        if (scopeTree.IsLocvarsNode(node)){
+            return true;
+        }
+
+        if (scopeTree.IsSubfuncsNode(node)){
+            List<TreeNode<Token>> children = node.getChildren();
+            TreeNode<Token> functionsNode = children.get(0);
+            return CheckTypes(functionsNode);
+        }
+
+
 
         throw new RuntimeException("undefined CheckTypes call " + node.getData().getWord());
     }
@@ -179,6 +261,15 @@ public class TypeCheck {
             scopeTree.CalculateScope(childNode);
             Symbol vNameSymbol = scopeTree.GetCurrentSymbolTable().LookupVar(childNode.getData().getWord());
             String type = vNameSymbol.type;
+            return type;
+        }
+
+        if (scopeTree.IsFnameNode(node)){
+            List<TreeNode<Token>> children = node.getChildren();
+            TreeNode<Token> childNode = children.get(0);
+            scopeTree.CalculateScope(childNode);
+            Symbol fNameSymbol = scopeTree.GetCurrentSymbolTable().LookupFunc(childNode.getData().getWord());
+            String type = fNameSymbol.type;
             return type;
         }
 
@@ -317,7 +408,103 @@ public class TypeCheck {
             }
         }
 
-        throw new RuntimeException("undefined typeof call "+ node.getData().getWord());
+        if (scopeTree.IsCondNode(node)){
+            List<TreeNode<Token>> children = node.getChildren();
+            TreeNode<Token> firstNode = children.get(0);
+            return TypeOf(firstNode);
+        }
+
+        if (scopeTree.IsUcondNode(node)){
+            List<TreeNode<Token>> children = node.getChildren();
+            TreeNode<Token> unopNode = children.get(0);
+            TreeNode<Token> simpleNode = children.get(0);
+
+            if (TypeOf(unopNode).equals("b")){
+                if (TypeOf(simpleNode).equals("b")){
+                    return "b";
+                }
+            }
+            
+            return "u";
+        }
+
+        if (scopeTree.IsBcondNode(node)){
+            List<TreeNode<Token>> children = node.getChildren();
+            TreeNode<Token> binopNode = children.get(0);
+            TreeNode<Token> bparamNode = children.get(2);
+
+            List<TreeNode<Token>> bParamChildren = bparamNode.getChildren();
+
+            if (bParamChildren.get(0).getData().getWord().equals("SIMPLE")){
+                TreeNode<Token> simple1 = bParamChildren.get(0);
+                TreeNode<Token> simple2 = bParamChildren.get(2);
+
+                if (TypeOf(binopNode).equals("b")){
+                    if (TypeOf(simple1).equals("b")){
+                        if (TypeOf(simple2).equals("b")){
+                            return "b";
+                        }
+                    }
+
+                }
+                return "u";
+            }
+
+            if (bParamChildren.get(0).getData().getWord().equals("ATOMIC")){
+                TreeNode<Token> atomic1 = bParamChildren.get(0);
+                TreeNode<Token> atomic2 = bParamChildren.get(2);
+
+                if (TypeOf(binopNode).equals("b")){
+                    if (TypeOf(atomic1).equals("b")){
+                        if (TypeOf(atomic2).equals("b")){
+                            return "b";
+                        }
+                    }
+
+                }
+
+                if (TypeOf(binopNode).equals("c")){
+                    if (TypeOf(atomic1).equals("num")){
+                        if (TypeOf(atomic2).equals("num")){
+                            return "b";
+                        }
+                    }
+
+                }
+
+                return "u";
+            }
+            
+        }
+
+        if (scopeTree.IsSimpleNode(node)){
+            List<TreeNode<Token>> children = node.getChildren();
+            TreeNode<Token> binopNode = children.get(0);
+            TreeNode<Token> atomic1Node = children.get(2);
+            TreeNode<Token> atomic2Node = children.get(4);
+
+            if (TypeOf(binopNode).equals("b")){
+                if (TypeOf(atomic1Node).equals("b")){
+                    if (TypeOf(atomic2Node).equals("b")){
+                        return "b";
+                    }
+
+                }
+            }
+
+            if (TypeOf(binopNode).equals("c")){
+                if (TypeOf(atomic1Node).equals("n")){
+                    if (TypeOf(atomic2Node).equals("n")){
+                        return "b";
+                    }
+
+                }
+            }
+
+            return "u";
+        }
+
+        throw new RuntimeException("undefined typeof call "+ node.getData().getWord()+"parent:"+node.getParent().getData().getWord());
     }
     
 }

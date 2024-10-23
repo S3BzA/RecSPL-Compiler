@@ -1,17 +1,19 @@
-main num V_a, num V_b , num V_c,
+main text V_a, num V_b , num V_c,
 begin
-    skip;
-    halt;
-    V_a = 1;
-    print V_a;
-    print "Hello";
-    print 1;
+   if eq(1,1)
+    then
+        begin
+        end
+    else
+        begin
+        end
+   ;
 end
 
-num F_fun ( V_a , V_b , V_c ) {
+void F_fun ( V_a , V_b , V_c ) {
     text V_d , num V_e , num V_f ,
     begin
-        return V_d;
+        F_fun ( V_e , 2 , 2 ) ;
     end
 }
 end
