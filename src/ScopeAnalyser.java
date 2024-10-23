@@ -85,7 +85,8 @@ public class ScopeAnalyser {
 
         if (scopeTree.IsVarUsage(node)){
             scopeTree.CalculateScope(node);
-            Symbol s =scopeTree.GetCurrentSymbolTable().LookupVar(node.getData().getWord());
+            // Symbol s =
+            scopeTree.GetCurrentSymbolTable().LookupVar(node.getData().getWord());
             //comment out to remove printing
             // Ansi.printlnFormatted(("\nScope Name: " +scopeTree.GetCurrentSymbolTable().GetScopeName()));
             // System.out.println("    "+node.getData().getWord()+" Symbol: "+s);
@@ -107,7 +108,8 @@ public class ScopeAnalyser {
 
         if (scopeTree.IsFuncUsage(node)){
             scopeTree.CalculateScope(node);
-            Symbol s =scopeTree.GetCurrentSymbolTable().LookupFunc(node.getData().getWord());
+            // Symbol s =
+            scopeTree.GetCurrentSymbolTable().LookupFunc(node.getData().getWord());
             //comment out to remove printing
             // Ansi.printlnFormatted(("\nScope Name: " +scopeTree.GetCurrentSymbolTable().GetScopeName()));
             // System.out.println("    "+node.getData().getWord()+" Symbol: "+s);
