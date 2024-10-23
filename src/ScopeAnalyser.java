@@ -23,10 +23,10 @@ public class ScopeAnalyser {
         System.out.println("");
         Ansi.printlnFormatted(Ansi.green("Scope Tree and Tables..."));
         scopeTree.printScopeTreeAndTables();
-        Ansi.printlnFormatted(Ansi.green("Variable Usage..."));
         DfsVerifyVarUse(rootTreeNode);
-        Ansi.printlnFormatted(Ansi.green("Function Usage..."));
+        Ansi.printlnFormatted(Ansi.green("Variable Usage ok..."));
         DfsVerifyFuncUse(rootTreeNode);
+        Ansi.printlnFormatted(Ansi.green("Function Usage ok..."));
         scopeTree.ResetTreeToRoot();
         return this.scopeTree;
     }
@@ -85,10 +85,11 @@ public class ScopeAnalyser {
 
         if (scopeTree.IsVarUsage(node)){
             scopeTree.CalculateScope(node);
-            Symbol s =scopeTree.GetCurrentSymbolTable().LookupVar(node.getData().getWord());
+            // Symbol s =
+            scopeTree.GetCurrentSymbolTable().LookupVar(node.getData().getWord());
             //comment out to remove printing
-            Ansi.printlnFormatted(("\nScope Name: " +scopeTree.GetCurrentSymbolTable().GetScopeName()));
-            System.out.println("    "+node.getData().getWord()+" Symbol: "+s);
+            // Ansi.printlnFormatted(("\nScope Name: " +scopeTree.GetCurrentSymbolTable().GetScopeName()));
+            // System.out.println("    "+node.getData().getWord()+" Symbol: "+s);
         }
     
         // Recursively visit all the children
@@ -107,10 +108,11 @@ public class ScopeAnalyser {
 
         if (scopeTree.IsFuncUsage(node)){
             scopeTree.CalculateScope(node);
-            Symbol s =scopeTree.GetCurrentSymbolTable().LookupFunc(node.getData().getWord());
+            // Symbol s =
+            scopeTree.GetCurrentSymbolTable().LookupFunc(node.getData().getWord());
             //comment out to remove printing
-            Ansi.printlnFormatted(("\nScope Name: " +scopeTree.GetCurrentSymbolTable().GetScopeName()));
-            System.out.println("    "+node.getData().getWord()+" Symbol: "+s);
+            // Ansi.printlnFormatted(("\nScope Name: " +scopeTree.GetCurrentSymbolTable().GetScopeName()));
+            // System.out.println("    "+node.getData().getWord()+" Symbol: "+s);
         }
     
         // Recursively visit all the children

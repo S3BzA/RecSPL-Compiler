@@ -21,6 +21,9 @@ public class Main {
 			ScopeAnalyser scopeAnalyser = new ScopeAnalyser(parser.getRoot());
 			Ansi.printlnFormatted(Ansi.green("Building Symbol Table and Analysing usage..."));
 			ScopeTree scopes = scopeAnalyser.PopulateTree();
+			Ansi.printlnFormatted(Ansi.green("\nChecking types..."));
+			TypeCheck typeChecker = new TypeCheck(scopes, parser.getRoot());
+			typeChecker.AnalyseTypes();
 		} catch (Exception e) {
 			Ansi.printlnFormatted(Ansi.red("Error: " + e.getMessage()));
 			e.printStackTrace();
