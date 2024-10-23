@@ -79,6 +79,13 @@ public class ScopeTree {
     }
     
     //node tests
+    public Boolean IsBranchNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("BRANCH") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
 
     public Boolean IsBinopNode(TreeNode<Token> tok){
         if (tok.getData().getWord().equals("BINOP") && (tok.getData().getId() ==-1)){

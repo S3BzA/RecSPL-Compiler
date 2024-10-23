@@ -152,9 +152,10 @@ public class TypeCheck {
         }
        
         if (scopeTree.IsBranchNode(node)){
+            List<TreeNode<Token>> children = node.getChildren();
 
         }
-        
+
         throw new RuntimeException("undefined CheckTypes call " + node.getData().getWord());
     }
 
