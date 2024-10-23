@@ -133,7 +133,7 @@ public class ScopeAnalyser {
             // Ensure no return in main ALGO anywhere
             List<TreeNode<Token>> children = node.getChildren();
             TreeNode<Token> algoNode = children.get(2);
-            DfsCheckMainReturns(algoNode);
+            DfsCheckVoidReturns(algoNode);
         }
 
         if (scopeTree.IsDeclNode(node)){
@@ -141,8 +141,24 @@ public class ScopeAnalyser {
 
             if (type.equals("void")){
                 //ensure there are no returns in the algo for void anywhere
-            }else{
+                List<TreeNode<Token>> children = node.getChildren();
+                TreeNode<Token> bodyNode = children.get(1);
+                List<TreeNode<Token>> bodyChildren = bodyNode.getChildren();
+                TreeNode<Token> algoNode = bodyChildren.get(2);
+                DfsCheckVoidReturns(algoNode);
+            }else if (type.equals("num")){
                 //ensure there is one return and its at the end of algo
+                List<TreeNode<Token>> children = node.getChildren();
+                TreeNode<Token> bodyNode = children.get(1);
+                List<TreeNode<Token>> bodyChildren = bodyNode.getChildren();
+                TreeNode<Token> algoNode = bodyChildren.get(2);
+                Boolean error = !DfsCheckNumContainsReturn(algoNode);
+
+                if (error){
+                    throw new RuntimeException("No return found in function "+ scopeTree.FindDeclName(node));
+                }
+            }else{
+                throw new RuntimeException("error checking returns function of type text");
             }
         }
     
@@ -156,21 +172,47 @@ public class ScopeAnalyser {
     }
 
     //helper
-    private void DfsCheckMainReturns(TreeNode<Token> node){
+    private void DfsCheckVoidReturns(TreeNode<Token> node){
         if (node == null) {
             return;
         }
 
         if (scopeTree.IsReturnNode(node)) {
-            throw new RuntimeException("main function with return type: undefined contains a return");
+            throw new RuntimeException("return found in void function or main");
         }
 
         List<TreeNode<Token>> children = node.getChildren();
         if (children != null) {
             for (TreeNode<Token> child : children) {
-                DfsCheckMainReturns(child); // Recursive call for each child
+                DfsCheckVoidReturns(child); // Recursive call for each child
             }
         }
+
+    }
+
+    private Boolean DfsCheckNumContainsReturn(TreeNode<Token> node){
+        if (node == null) {
+            return false;
+        }
+    
+        if (scopeTree.IsReturnNode(node)) {
+            // Found a return node, we are happy
+            return true;
+        }
+    
+        // Recursively check all child nodes
+        List<TreeNode<Token>> children = node.getChildren();
+        if (children != null) {
+            for (TreeNode<Token> child : children) {
+                boolean found = DfsCheckNumContainsReturn(child);
+                if (found) {
+                    return true; // Return early since we found a return node
+                }
+            }
+        }
+    
+        // No return node found in this subtree
+        return false;
 
     }
 }
