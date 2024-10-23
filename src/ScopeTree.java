@@ -78,6 +78,22 @@ public class ScopeTree {
         }
     }
     
+    //node tests
+
+    public Boolean IsTermNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("TERM") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
+    public Boolean IsAssignNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("ASSIGN") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
     public Boolean IsDeclNode(TreeNode<Token> tok){
      if (tok.getData().getWord() == "DECL" && tok.getData().getId() ==-1){
         return true;
@@ -92,6 +108,62 @@ public class ScopeTree {
          return false;
     }
 
+    public Boolean IsGlobvarsNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("GLOBVARS") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
+    public Boolean IsAlgoNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("ALGO") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
+    public Boolean IsFunctionsNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("FUNCTIONS") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
+    public Boolean IsInstrucNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("INSTRUC") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
+    public Boolean IsCommandNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("COMMAND") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
+    public Boolean IsAtomicNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("ATOMIC") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
+    public Boolean IsVnameNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("VNAME") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
+    public Boolean IsConstNode(TreeNode<Token> tok){
+        if (tok.getData().getWord().equals("CONST") && (tok.getData().getId() ==-1)){
+            return true;
+         }
+         return false;
+    }
+
     public Boolean IsReturnNode(TreeNode<Token> tok){
         if (tok.getData().getWord().equals("return") && (tok.getData().getTokenClass().equals("RETURN"))){
             return true;
@@ -99,6 +171,66 @@ public class ScopeTree {
          return false;
     }
 
+    public Boolean IsVarUsage(TreeNode<Token> tok){
+        if (!this.IsVarDeclaration(tok)){
+            if (tok.getData().getTokenClass().equals("V") && (tok.getData().getId() != -1)){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public Boolean IsFuncUsage(TreeNode<Token> tok){
+            if (tok.getData().getTokenClass().equals("F") && (tok.getData().getId() != -1)){
+
+                TreeNode<Token> parent = tok.getParent();
+                if (parent == null){
+                    throw new RuntimeException("Parent is null when checking var declaration");
+                }
+
+                TreeNode<Token> parentParent = parent.getParent();
+                if (parentParent == null){
+                    throw new RuntimeException("Parent is null when checking var declaration");
+                }
+
+                if (!IsDeclNode(parentParent.getParent())){
+                    return true;
+                }
+            }
+        return false;
+    }
+    
+    public Boolean IsVarDeclaration(TreeNode<Token> tok){
+        //assuming tok is V with non negative id
+        if (tok.getData().getTokenClass().equals("V") && (tok.getData().getId() != -1)){
+
+            TreeNode<Token> parent = tok.getParent();
+            if (parent == null){
+                throw new RuntimeException("Parent is null when checking var declaration");
+            }
+            TreeNode<Token> parentParent = parent.getParent();
+            if (parentParent == null){
+                throw new RuntimeException("Parent is null when checking var declaration");
+            }
+
+            if (parent.getData().getWord() == "VNAME" && (parent.getData().getId() == -1)){
+                if (parentParent.getData().getWord() == "GLOBVARS" && (parentParent.getData().getId() == -1)){
+                    return true;
+                }
+                if (parentParent.getData().getWord() == "LOCVARS" && (parentParent.getData().getId() == -1)){
+                    return true;
+                }
+                if (parentParent.getData().getWord() == "HEADER" && (parentParent.getData().getId() == -1)){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+
+    }
+    
+    //Finders
     public String FindDeclName(TreeNode<Token> tok){
         if (tok == null){
             throw new RuntimeException("Invalid declaration name fetch attempt node is null");
@@ -212,36 +344,6 @@ public class ScopeTree {
 
     }
 
-    public Boolean IsVarDeclaration(TreeNode<Token> tok){
-        //assuming tok is V with non negative id
-        if (tok.getData().getTokenClass().equals("V") && (tok.getData().getId() != -1)){
-
-            TreeNode<Token> parent = tok.getParent();
-            if (parent == null){
-                throw new RuntimeException("Parent is null when checking var declaration");
-            }
-            TreeNode<Token> parentParent = parent.getParent();
-            if (parentParent == null){
-                throw new RuntimeException("Parent is null when checking var declaration");
-            }
-
-            if (parent.getData().getWord() == "VNAME" && (parent.getData().getId() == -1)){
-                if (parentParent.getData().getWord() == "GLOBVARS" && (parentParent.getData().getId() == -1)){
-                    return true;
-                }
-                if (parentParent.getData().getWord() == "LOCVARS" && (parentParent.getData().getId() == -1)){
-                    return true;
-                }
-                if (parentParent.getData().getWord() == "HEADER" && (parentParent.getData().getId() == -1)){
-                    return true;
-                }
-            }
-        }
-
-        return false;
-
-    }
-    
     public String FindVarDeclType(TreeNode<Token> tok){
 
         if (tok == null) {
@@ -319,35 +421,6 @@ public class ScopeTree {
 
     }
 
-    public Boolean IsVarUsage(TreeNode<Token> tok){
-        if (!this.IsVarDeclaration(tok)){
-            if (tok.getData().getTokenClass().equals("V") && (tok.getData().getId() != -1)){
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public Boolean IsFuncUsage(TreeNode<Token> tok){
-            if (tok.getData().getTokenClass().equals("F") && (tok.getData().getId() != -1)){
-
-                TreeNode<Token> parent = tok.getParent();
-                if (parent == null){
-                    throw new RuntimeException("Parent is null when checking var declaration");
-                }
-
-                TreeNode<Token> parentParent = parent.getParent();
-                if (parentParent == null){
-                    throw new RuntimeException("Parent is null when checking var declaration");
-                }
-
-                if (!IsDeclNode(parentParent.getParent())){
-                    return true;
-                }
-            }
-        return false;
-    }
-    
     //Printing
 
     public void printScopeTreeAndTables() {
