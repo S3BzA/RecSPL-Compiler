@@ -13,16 +13,6 @@ end
 num F_fun2 (V_a, V_b, V_c){
     text V_d , text V_e , num V_f ,
     begin
-        return 1;
-        if eq(V_a, V_b)
-        then 
-            begin
-                return 1;
-            end
-        else 
-            begin
-            end
-        ;
     end
 }
 end
