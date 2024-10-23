@@ -1,5 +1,4 @@
 
-import com.sun.source.tree.Tree;
 import java.util.List;
 
 public class Parser {
@@ -282,7 +281,9 @@ public class Parser {
 
 		// UNOP handling (unary operations)
 		if (current == TokenType.NOT || current == TokenType.SQRT) {
-			opNode.addChild(new TreeNode<>(match(current))); // Match 'not' or 'sqrt'
+			TreeNode<Token> unopNode = new TreeNode<>(new Token(-1, TokenType.V, "UNOP")); // Non-terminal node
+			unopNode.addChild(new TreeNode<>(match(current))); // Match 'not' or 'sqrt'
+			opNode.addChild(unopNode);
 			opNode.addChild(new TreeNode<>(match(TokenType.LPAREN))); // Match '('
 			opNode.addChild(parseArg()); // Parse argument inside parentheses
 			opNode.addChild(new TreeNode<>(match(TokenType.RPAREN))); // Match ')'
@@ -291,7 +292,9 @@ public class Parser {
 		else if (current == TokenType.ADD || current == TokenType.SUB || current == TokenType.MUL ||
 				current == TokenType.DIV || current == TokenType.OR || current == TokenType.AND ||
 				current == TokenType.EQ || current == TokenType.GRT) {
-			opNode.addChild(new TreeNode<>(match(current))); // Match binary operator
+			TreeNode<Token> binopNode = new TreeNode<>(new Token(-1, TokenType.V, "BINOP")); // Non-terminal node
+			binopNode.addChild(new TreeNode<>(match(current))); // Match binary operator
+			opNode.addChild(binopNode); // Match binary operator
 			opNode.addChild(new TreeNode<>(match(TokenType.LPAREN))); // Match '('
 			opNode.addChild(parseArg()); // Parse first argument
 			opNode.addChild(new TreeNode<>(match(TokenType.COMMA))); // Match ','
