@@ -6,6 +6,15 @@ We made our compiler in Java. We completed phase 1, 2, 3 and 4 of the project an
 
 As such, we only expect an arg for the input that is a file path such as `path/to/input.txt`. Further instructions follow.
 
+When run, we output to the terminal:
+1. The input program.
+2. The Tokens listed out.
+3. The Concrete syntax tree.
+4. The Scope Tree and Symbol Tables
+5. If type checks were passed
+
+We did not, as previously mentioned, get to part 5 and thus no output files are generated.
+
 ## Assumptions of RecSPL Input
 
 1. We assume the assignment token `< input` to have a space between the `<` and the `input`.
