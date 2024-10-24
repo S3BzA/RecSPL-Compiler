@@ -1,4 +1,3 @@
-import java.io.File;
 
 public class Main {
 
@@ -34,14 +33,9 @@ public class Main {
 			Ansi.printlnFormatted(Ansi.green("\nChecking types..."));
 			TypeCheck typeChecker = new TypeCheck(scopes, parser.getRoot());
 			typeChecker.AnalyseTypes();
-			System.out.println("Output Path: "+outputPath);
-			Ansi.printlnFormatted(Ansi.green("Generating code..."));
-			// Create empty file to test if it can be created
-			File file = new File(outputPath);
-			file.createNewFile();
+			System.out.println("OUtput path arg: "+outputPath);
 		} catch (Exception e) {
 			Ansi.printlnFormatted(Ansi.red("Error: " + e.getMessage()));
-			e.printStackTrace();
 		}
 	}
 
