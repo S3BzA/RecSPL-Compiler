@@ -61,7 +61,7 @@ Any Java 17 should work.
 The .jar can be run with the following command (linux):
 
 ```bash
-java -jar path/to/compiler.jar path/to/input.txt
+java -jar path/to/Compiler.jar path/to/input.txt
 ```
 
 Should you want to use the makefile commands to run from the source code:
