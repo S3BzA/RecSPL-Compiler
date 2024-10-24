@@ -33,17 +33,17 @@ public class Main {
 			Ansi.printlnFormatted(Ansi.green("\nChecking types..."));
 			TypeCheck typeChecker = new TypeCheck(scopes, parser.getRoot());
 			typeChecker.AnalyseTypes();
-			System.out.println("OUtput path arg: "+outputPath);
+			System.out.println("Output path arg: "+outputPath+"// ignore, we didn;t end up doing this part (5a, 5b)");
 		} catch (Exception e) {
 			Ansi.printlnFormatted(Ansi.red("Error: " + e.getMessage()));
 		}
 	}
 
 	private static void printHelp() {
-        Ansi.printlnFormatted(Ansi.yellow("Usage: make all ARGS=" + Ansi.italic("<file-path> <output-path>")));
-        Ansi.printlnFormatted(Ansi.yellow("ARGS Options:"));
+        Ansi.printlnFormatted(Ansi.yellow(".jar usage: java -jar " + Ansi.italic("path/to/compile.jar path/to/input.txt")));
+        Ansi.printlnFormatted(Ansi.yellow("makefile usage: make all ARGS=" + Ansi.italic("path/to/input.txt")));
+        Ansi.printlnFormatted(Ansi.yellow("Options:"));
         Ansi.printlnFormatted(Ansi.yellow("  --help, -h    Display this help menu."));
-        Ansi.printlnFormatted(Ansi.yellow("  <file-path>   The path to the file you want to compile."));
-        Ansi.printlnFormatted(Ansi.yellow("  <output-path> The path where the output should be saved."));
+		Ansi.printlnFormatted(Ansi.yellow("  path/to/input.txt    Path to the input file."));
     }
 }
