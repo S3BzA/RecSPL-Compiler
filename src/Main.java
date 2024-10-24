@@ -1,3 +1,5 @@
+import java.io.File;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -7,6 +9,14 @@ public class Main {
 		}
 
 		String filePath = args[0];
+		String outputPath;
+
+		if (args.length < 2) {
+			Ansi.printlnFormatted(Ansi.red("Warning: Missing output path argument. Using default path."));
+			outputPath = "output.txt"; // Set your default path here
+		} else {
+			outputPath = args[1];
+		}
 
 		try {
 			Ansi.printlnFormatted(Ansi.green("Starting Lexer..."));
@@ -24,6 +34,11 @@ public class Main {
 			Ansi.printlnFormatted(Ansi.green("\nChecking types..."));
 			TypeCheck typeChecker = new TypeCheck(scopes, parser.getRoot());
 			typeChecker.AnalyseTypes();
+			System.out.println("Output Path: "+outputPath);
+			Ansi.printlnFormatted(Ansi.green("Generating code..."));
+			// Create empty file to test if it can be created
+			File file = new File(outputPath);
+			file.createNewFile();
 		} catch (Exception e) {
 			Ansi.printlnFormatted(Ansi.red("Error: " + e.getMessage()));
 			e.printStackTrace();
@@ -31,9 +46,10 @@ public class Main {
 	}
 
 	private static void printHelp() {
-		Ansi.printlnFormatted(Ansi.yellow("Usage: make all ARGS="+Ansi.italic("<file-path>")));
-		Ansi.printlnFormatted(Ansi.yellow("ARGS Options:"));
-		Ansi.printlnFormatted(Ansi.yellow("  --help, -h    Display this help menu."));
-		Ansi.printlnFormatted(Ansi.yellow("  path/to/file.txt   The path to the file you want to compile."));
-	}
+        Ansi.printlnFormatted(Ansi.yellow("Usage: make all ARGS=" + Ansi.italic("<file-path> <output-path>")));
+        Ansi.printlnFormatted(Ansi.yellow("ARGS Options:"));
+        Ansi.printlnFormatted(Ansi.yellow("  --help, -h    Display this help menu."));
+        Ansi.printlnFormatted(Ansi.yellow("  <file-path>   The path to the file you want to compile."));
+        Ansi.printlnFormatted(Ansi.yellow("  <output-path> The path where the output should be saved."));
+    }
 }
