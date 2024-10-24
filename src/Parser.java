@@ -342,7 +342,7 @@ public class Parser {
 	private TreeNode<Token> parseUCond() {
 		TreeNode<Token> uCondNode = new TreeNode<>(new Token(-1, TokenType.V, "UCOND")); // Match 'not'
 		TreeNode<Token> unopNode = new TreeNode<>(new Token(-1, TokenType.V, "UNOP")); // Non-terminal node
-		unopNode.addChild(new TreeNode<>(match(TokenType.fromString(peek().getTokenClass())))); // Match 'not' or 'sqrt'
+		unopNode.addChild(new TreeNode<>(match(TokenType.fromTokenType(peek().getTokenClass())))); // Match 'not' or 'sqrt'
 		uCondNode.addChild(unopNode);
 		uCondNode.addChild(new TreeNode<>(match(TokenType.LPAREN))); // Match '('
 		uCondNode.addChild(parseSimple()); // Parse simple condition inside parentheses
