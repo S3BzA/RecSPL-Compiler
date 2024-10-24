@@ -1,5 +1,8 @@
 # RecSPL Compiler
 
+Sebastian Guimaraens u22494767
+James Fitzsimmons u21516741
+
 ## Introduction
 
 We made our compiler in Java. We completed phase 1, 2, 3 and 4 of the project and did not get to 5a or 5b.
@@ -7,6 +10,7 @@ We made our compiler in Java. We completed phase 1, 2, 3 and 4 of the project an
 As such, we only expect an arg for the input that is a file path such as `path/to/input.txt`. Further instructions follow.
 
 When run, we output to the terminal:
+
 1. The input program.
 2. The Tokens listed out.
 3. The Concrete syntax tree.
@@ -15,16 +19,19 @@ When run, we output to the terminal:
 
 We did not, as previously mentioned, get to part 5 and thus no output files are generated.
 
+Link to our GitHub repo with source code: https://github.com/S3BzA/RecSPL-Compiler
+
 ## Assumptions of RecSPL Input
 
 1. We assume the assignment token `< input` to have a space between the `<` and the `input`.
 2. We would hope that the files could be formatted similar to:
+
 ```plaintext
 main
 num V_number,
 
 begin
-V_number = add(0.03 , 2 );  
+V_number = add(0.03 , 2 );
 end
 num F_test(V_first, V_second, V_third){
 text V_t1,
@@ -38,6 +45,7 @@ end
 }
 end
 ```
+
 ## Java Version
 
 ### Linux
@@ -58,13 +66,22 @@ Any Java 17 should work.
 
 ## Usage
 
+You must open the .jar in a terminal and procede as follows:
+
 The .jar can be run with the following command (linux):
 
 ```bash
 java -jar path/to/Compiler.jar path/to/input.txt
 ```
 
-Should you want to use the makefile commands to run from the source code:
+The .jar can be run with the following command (windows):
+
+```bash
+ java -jar .\path\to\Compiler.jar .\path\to\input.txt
+```
+
+Should you want to use the makefile commands to run from the source code (need slinux):
+
 ```bash
 make all ARGS="path/to/input.txt"
 ```
