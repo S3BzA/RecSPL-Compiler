@@ -280,7 +280,7 @@ public class Parser {
 	// OP ::= UNOP(ARG) | BINOP(ARG,ARG)
 	private TreeNode<Token> parseOp() {
 		TokenType current = TokenType.fromTokenType(peek().getTokenClass());
-		TreeNode<Token> opNode = new TreeNode<Token>(new Token(-1, TokenType.V, "OP")); // Non-terminal node
+		TreeNode<Token> opNode = new TreeNode<>(new Token(-1, TokenType.V, "OP")); // Non-terminal node
 
 		// UNOP handling (unary operations)
 		if (current == TokenType.NOT || current == TokenType.SQRT) {
