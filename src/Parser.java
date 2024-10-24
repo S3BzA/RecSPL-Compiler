@@ -328,8 +328,7 @@ public class Parser {
 		if (current == TokenType.NOT || current == TokenType.SQRT) {
 			condNode.addChild(parseUCond());
 			return condNode; // Parse unary condition
-		} else if (current == TokenType.OR || current == TokenType.AND || current == TokenType.EQ
-				|| current == TokenType.GRT) {
+		} else if (current == TokenType.ADD || current == TokenType.SUB || current == TokenType.MUL || current == TokenType.DIV || current == TokenType.OR || current == TokenType.AND ||current == TokenType.EQ || current == TokenType.GRT) {
 			condNode.addChild(parseBCond());
 			return condNode; // Parse binary condition
 		} else {
