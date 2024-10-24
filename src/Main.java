@@ -40,7 +40,7 @@ public class Main {
 	}
 
 	private static void printHelp() {
-        Ansi.printlnFormatted(Ansi.yellow(".jar usage: java -jar " + Ansi.italic("path/to/compile.jar path/to/input.txt")));
+        Ansi.printlnFormatted(Ansi.yellow(".jar usage: java -jar " + Ansi.italic("path/to/Compile.jar path/to/input.txt")));
         Ansi.printlnFormatted(Ansi.yellow("makefile usage: make all ARGS=" + Ansi.italic("path/to/input.txt")));
         Ansi.printlnFormatted(Ansi.yellow("Options:"));
         Ansi.printlnFormatted(Ansi.yellow("  --help, -h    Display this help menu."));
