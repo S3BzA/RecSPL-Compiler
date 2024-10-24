@@ -145,7 +145,6 @@ public class TypeCheck {
                 if (TypeOf(vnameNode).equals(TypeOf(termNode))){
                     return true;
                 }else{
-                    System.out.println("ERROR IN HERE");
                     return false;
                 }
 
