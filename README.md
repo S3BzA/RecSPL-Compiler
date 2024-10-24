@@ -10,8 +10,8 @@ When run, we output to the terminal:
 1. The input program.
 2. The Tokens listed out.
 3. The Concrete syntax tree.
-4. The Scope Tree and Symbol Tables
-5. If type checks were passed
+4. The Scope Tree and Symbol Tables.
+5. If type checks were passed.
 
 We did not, as previously mentioned, get to part 5 and thus no output files are generated.
 
